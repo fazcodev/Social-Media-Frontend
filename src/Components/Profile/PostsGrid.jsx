@@ -32,7 +32,7 @@ export default function PostsGrid(props) {
         <div
           key={i}
           onClick={() => setActivePost(posts[i])}
-          className={`basis-1/3 shrink-0 aspect-square relative overflow-hidden bg-black cursor-pointer flex items-center img-overlay`}
+          className={`basis-[33%] shrink-0 aspect-square relative overflow-hidden bg-black cursor-pointer flex items-center img-overlay`}
           ref={posts.length === i + 1 ? lastPostElementRef : null}
         >
           <img

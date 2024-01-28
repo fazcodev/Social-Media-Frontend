@@ -16,7 +16,7 @@ export default {
       'lg': {'min': '900px'},
       // => @media (max-width: 1023px) { ... }
 
-      'md': {'min': '767px'},
+      'md': {'min': '768px'},
       // => @media (max-width: 767px) { ... }
       
       'sm': {'min': '639px'},
@@ -32,7 +32,7 @@ export default {
       'mlg': {'max': '900px'},
       // => @media (max-width: 1023px) { ... }
 
-      'mmd': {'max': '767px'},
+      'mmd': {'max': '768px'},
       // => @media (max-width: 767px) { ... }
 
       'msm': {'max': '639px'},

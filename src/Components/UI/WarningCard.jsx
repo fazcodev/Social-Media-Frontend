@@ -42,10 +42,10 @@ export default function WarningCard(props) {
 }
 
 WarningCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
-  confirmText: PropTypes.string.isRequired,
-  onConfirm: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  openModalHandler: PropTypes.func.isRequired,
+  title: PropTypes.string,
+  message: PropTypes.string,
+  confirmText: PropTypes.string,
+  onConfirm: PropTypes.func,
+  onCancel: PropTypes.func,
+  openModalHandler: PropTypes.func,
 };

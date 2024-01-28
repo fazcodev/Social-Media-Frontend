@@ -85,13 +85,13 @@ const ProfileDesc = (props) => {
       {editAvatarModal && (
         <Modal title="Edit Avatar" openModalHandler={setEditAvatarModal} />
       )}
-      <div className="p-5 msm:px-2">
-        <div className="flex justify-center gap-20 mtiny:gap-2 msm:gap-10">
+      <div className="p-3 msm:px-2">
+        <div className="flex justify-center gap-10 msm:gap-5">
           <div
             onClick={
               props.user == undefined ? () => setEditAvatarModal(true) : null
             }
-            className="lg:h-64 lg:w-64 tiny:h-32 tiny:w-32 h-[4rem] w-[4rem] relative flex items-center img-overlay overflow-hidden rounded-full cursor-pointer"
+            className="relative basis-5/12 xl:basis-[20%] mlg:basis-3/5 mtiny:basis-3/4 shrink flex items-center img-overlay overflow-hidden cursor-pointer"
           >
             {props.user == undefined && <div className="overlay" /> && (
               <div className="middle text-xs text-center text-white">
@@ -100,7 +100,7 @@ const ProfileDesc = (props) => {
               </div>
             )}
             <img
-              className="w-full h-full"
+              className="w-full rounded-full"
               alt="User Avatar"
               src={avatarURL == undefined ? AvatarPNG : avatarURL}
             />
@@ -157,6 +157,6 @@ export default ProfileDesc;
 
 
 ProfileDesc.propTypes = {
-  user: PropTypes.object.isRequired,
-  posts: PropTypes.array.isRequired,
+  user: PropTypes.object,
+  posts: PropTypes.array,
 };

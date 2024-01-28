@@ -47,66 +47,67 @@ export default function Recommend() {
   return (
     <>
       {suggestList.length > 0 && (
+        <button
+          onClick={() => setOpenList((prev) => !prev)}
+          className={`tiny:hidden absolute top-2 right-2 w-12 h-12 flex items-center justify-center bg-stone-300 rounded-full`}
+        >
+          <GroupAdd
+            className={`${openList ? "text-black" : "text-blue-600"}`}
+            fontSize="large"
+          />
+        </button>
+      )}
+      {suggestList.length > 0 && (
+        <div
+          className={`img-wrapper tiny:mt-10 w-1/4 mmd:w-1/3 mtiny:w-1/2 ${
+            openList ? "mtiny:opacity-100" : "mtiny:opacity-0 mtiny:invisible"
+          } mtiny:rounded-md mtiny:absolute mtiny:top-16 mtiny:right-2 mtiny:bg-stone-200 transition-all duration-300 max-h-40 text-center ${
+            seeAll ? "overflow-y-scroll" : "overflow-hidden"
+          }`}
+        >
+          <span className="text-sm font-semibold text-stone-400">
+            Suggestions for you
+          </span>
           <button
-            onClick={() => setOpenList((prev) => !prev)}
-            className={`tiny:hidden absolute top-2 right-2 w-12 h-12 flex items-center justify-center bg-stone-300 rounded-full`}
+            onClick={() => setSeeAll((prev) => !prev)}
+            className="text-sm font-bold w-20"
           >
-            <GroupAdd
-              className={`${openList ? "text-black" : "text-blue-600"}`}
-              fontSize="large"
-            />
+            {!seeAll ? "See All" : "See Less"}
           </button>
-        ) && (
-          <div
-            className={`img-wrapper tiny:mt-10 w-1/4 mmd:w-1/3 mtiny:w-1/2 ${
-              openList ? "mtiny:opacity-100" : "mtiny:opacity-0"
-            } mtiny:rounded-md mtiny:absolute mtiny:top-16 mtiny:right-2 mtiny:bg-stone-200 transition-all duration-300 max-h-40 text-center ${
-              seeAll ? "overflow-y-scroll" : "overflow-hidden"
-            }`}
-          >
-            <span className="text-sm font-semibold text-stone-400">
-              Suggestions for you
-            </span>
-            <button
-              onClick={() => setSeeAll((prev) => !prev)}
-              className="text-sm font-bold w-20"
-            >
-              {!seeAll ? "See All" : "See Less"}
-            </button>
 
-            <div className="flex flex-col w-full">
-              {suggestList.length > 0 &&
-                suggestList.map((person) => {
-                  return (
-                    <div
-                      key={person._id}
-                      className="flex cursor-pointer justify-center gap-3 mtiny:gap-2 items-center my-2"
-                      onClick={() => openUserProfile(person)}
-                    >
-                      <img
-                        className="h-10 w-10 mtiny:h-8 mtiny:w-8 rounded-full"
-                        src={
-                          person.avatarURL == undefined
-                            ? AvatarPNG
-                            : person.avatarURL
-                        }
-                      />
-                      <div>
-                        <h1 className="font-bold">{person.name}</h1>
-                        <h1 className="text-sm">{person.username}</h1>
-                      </div>
-                      <button
-                        onClick={(e) => followUser(e, person)}
-                        className="text-blue-600 cursor-pointer text-sm font-bold"
-                      >
-                        Follow
-                      </button>
+          <div className="flex flex-col w-full">
+            {suggestList.length > 0 &&
+              suggestList.map((person) => {
+                return (
+                  <div
+                    key={person._id}
+                    className="flex cursor-pointer justify-center gap-3 mtiny:gap-2 items-center my-2"
+                    onClick={() => openUserProfile(person)}
+                  >
+                    <img
+                      className="h-10 w-10 mtiny:h-8 mtiny:w-8 rounded-full"
+                      src={
+                        person.avatarURL == undefined
+                          ? AvatarPNG
+                          : person.avatarURL
+                      }
+                    />
+                    <div>
+                      <h1 className="font-bold">{person.name}</h1>
+                      <h1 className="text-sm">{person.username}</h1>
                     </div>
-                  );
-                })}
-            </div>
+                    <button
+                      onClick={(e) => followUser(e, person)}
+                      className="text-blue-600 cursor-pointer text-sm font-bold"
+                    >
+                      Follow
+                    </button>
+                  </div>
+                );
+              })}
           </div>
-        )}
+        </div>
+      )}
     </>
   );
 }

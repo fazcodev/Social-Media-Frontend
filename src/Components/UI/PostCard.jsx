@@ -213,8 +213,8 @@ export default function PostCard(props) {
 
 
 PostCard.propTypes = {
-  post: PropTypes.object.isRequired,
-  openModalHandler: PropTypes.func.isRequired,
+  post: PropTypes.object,
+  openModalHandler: PropTypes.func,
   liked: PropTypes.bool,
   likesCount: PropTypes.number,
   saved: PropTypes.bool,

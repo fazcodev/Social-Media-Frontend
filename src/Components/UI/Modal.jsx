@@ -15,7 +15,7 @@ export default function Modal(props) {
           <PostCard {...props} />,
           document.getElementById("overlay-root")
         )}
-      {props.title == "Create Post" &&
+      {props.title != "View Post" &&
         ReactDOM.createPortal(
           <ImageContainer {...props} />,
           document.getElementById("overlay-root")

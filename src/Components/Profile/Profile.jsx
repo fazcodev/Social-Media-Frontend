@@ -69,8 +69,8 @@ export default function Profile() {
     getSavedPosts();
   }, [location]);
   return (
-    <div className="flex-1 flex justify-evenly">
-      <div className="w-11/12 border-r overflow-y-auto">
+    <div className="flex flex-1 justify-evenly">
+      <div className="grow shrink basis-[85%] mmd:basis-[80%] border-r">
         <ProfileDesc />
         <div>
           <div ref={outerRef} className="w-full bg-stone-300 overflow-hidden">
