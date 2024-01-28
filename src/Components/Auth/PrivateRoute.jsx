@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Outlet, Navigate, useNavigate } from "react-router-dom";
+import { Outlet, Navigate, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
 import { BASE_URL } from "../Helpers/sendRequest";
-const backendApiUrl = `${BASE_URL}/users/me`;
 
 const PrivateRoute = () => {
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const location = useLocation();
+  if(location.pathname === "/")return <Navigate to="/signin" />
   const fetchPosts = async (username) => {
     try {
       const res = await axios.get(`${BASE_URL}/${username}/posts`, {

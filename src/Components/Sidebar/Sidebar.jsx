@@ -33,7 +33,7 @@ const Sidebar = () => {
   const handleClick = (e) => {
     const innerText = e.currentTarget.id;
     if (!["Create", "Search", "Notifications"].includes(innerText)) {
-      if (innerText == "Home") navigate("/");
+      if (innerText == "Home") navigate("/home");
       else if (innerText == "Profile") navigate("/profile/posts");
       else navigate("/" + innerText);
     }

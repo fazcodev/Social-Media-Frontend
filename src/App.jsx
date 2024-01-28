@@ -28,7 +28,7 @@ function App() {
               </div>
             }
           >
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/explore" element={<Explore />} />
           </Route>
           <Route

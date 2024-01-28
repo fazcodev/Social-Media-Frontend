@@ -69,7 +69,7 @@ const SignUp = () => {
           age: res.data.user.age,
         })
       );
-      navigate("/");
+      navigate("/home");
       const username = res.data.user.username;
       fetchPosts(username);
     } catch (er) {
