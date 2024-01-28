@@ -1,0 +1,29 @@
+.heart{
+    animation: animateHeart 1s linear forwards;
+    scale: 1.8;
+    translate: -50% -50%;
+}
+
+@keyframes animateHeart{
+    0%{
+        transform: scale(1); opacity: 0.2; rotate: -20deg;
+    }
+    20%{
+        transform: scale(1.5); opacity: 0.4; rotate: -10deg;
+    }
+    40%{
+        transform: scale(1.8); opacity: 0.6; rotate: 0deg;
+    }
+    60%{
+        transform: scale(1.6); opacity: 0.8; rotate: 10deg;
+    }
+    80%{
+        transform: scale(1.2); opacity: 0.6; rotate: 20deg;
+    }
+    90%{
+        transform: scale(1.5); opacity: 0.4; rotate: 10deg;
+    }
+    100%{
+        transform: scale(1); opacity: 0; rotate: 0deg;
+    }
+}
