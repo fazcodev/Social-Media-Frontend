@@ -9,7 +9,6 @@ const PrivateRoute = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  if(location.pathname === "/")return <Navigate to="/signin" />
   const fetchPosts = async (username) => {
     try {
       const res = await axios.get(`${BASE_URL}/${username}/posts`, {
@@ -43,6 +42,7 @@ const PrivateRoute = () => {
       );
       const username = res.data.username;
       fetchPosts(username);
+      if(location.pathname == '/')navigate("/home");
     })
     .catch((err) => {
       console.log("Unauthorized", err);
