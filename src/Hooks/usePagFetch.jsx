@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-const useFetch = (query, pageNumber, limit, url) => {
+const usePagFetch = (query, pageNumber, limit, url) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [results, setResults] = useState([]);
@@ -19,9 +19,7 @@ const useFetch = (query, pageNumber, limit, url) => {
       url: url,
       //pass skip and limit as query params
       params: { q: query, skip: pageNumber * limit, limit: limit },
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
+      withCredentials : true,
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then((res) => {
@@ -46,4 +44,4 @@ const useFetch = (query, pageNumber, limit, url) => {
   return { loading, error, results, hasMore };
 };
 
-export default useFetch;
+export default usePagFetch;

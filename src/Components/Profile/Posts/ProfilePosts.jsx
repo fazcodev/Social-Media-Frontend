@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import PropTypes from "prop-types";
+import { useState } from "react";
 
-import Modal from "../UI/Modal";
+import Modal from "../../UI/Modal";
 import PostsGrid from "./PostsGrid";
 
 const ProfilePosts = (props) => {
@@ -22,3 +23,9 @@ const ProfilePosts = (props) => {
 };
 
 export default ProfilePosts;
+
+ProfilePosts.propTypes = {
+  posts: PropTypes.array.isRequired,
+};
+
+

@@ -2,36 +2,40 @@ import { Outlet, Navigate, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
-import { BASE_URL } from "../Helpers/sendRequest";
+import { apiUrl } from "../../config";
 
 const PrivateRoute = () => {
-  const token = localStorage.getItem("token");
+  let username = localStorage.getItem("username");
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-  if(!token)return <Navigate to="/signin" />;
+
+  if (!username) return <Navigate to="/signin" />;
   const fetchPosts = async (username) => {
     try {
-      const res = await axios.get(`${BASE_URL}/${username}/posts`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      });
+      const res = await axios.get(
+        `${apiUrl}/${username}/posts`,
+        {
+          withCredentials: true,
+        }
+      );
       dispatch(authActions.setPosts(res.data));
     } catch (err) {
       console.log(err);
     }
   };
   axios
-    .get(`${BASE_URL}/users/me`, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
+    .get(
+      `${apiUrl}/users/me`,
+      {
+        withCredentials: true,
+      }
+    )
     .then((res) => {
       dispatch(
         authActions.setAuthData({
-          token: localStorage.getItem("token"),
+          // token: localStorage.getItem("token"),
           name: res.data.name,
           email: res.data.email,
           username: res.data.username,
@@ -41,19 +45,17 @@ const PrivateRoute = () => {
           age: res.data.age,
         })
       );
-      const username = res.data.username;
+
+      username = localStorage.getItem("username");
       fetchPosts(username);
-      if(location.pathname == '/')navigate('/home');
+      if (location.pathname == "/") navigate("/home");
+      console.log("Authorized");
     })
     .catch((err) => {
-      console.log("Unauthorized", err);
-      return <Navigate to="/signin" />;
+      console.log("Unauthorized", err.response.data.error);
+      navigate("/signin", { replace: true });
     });
 
   return <Outlet />;
 };
 export default PrivateRoute;
-
-
-
-

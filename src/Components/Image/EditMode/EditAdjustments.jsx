@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import Slider from "@mui/material/Slider";
 
 const Adjustments = ({imageRef }) => {

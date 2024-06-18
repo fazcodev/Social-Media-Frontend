@@ -1,5 +1,5 @@
-import ChangePassword from "./ChangePassword";
-import ProfileInfo from "./ProfileInfo";
+import ChangePassword from "./ChangePassword/ChangePassword";
+import ProfileInfo from "./ChangeInfo/ProfileInfo";
 
 export default function EditProfile() {
   return (

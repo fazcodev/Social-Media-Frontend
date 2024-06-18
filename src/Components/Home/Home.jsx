@@ -1,20 +1,20 @@
 import { useState, useRef, useCallback } from "react";
-import useFetch from "../../Hooks/useFetch";
-import FeedCard from "../UI/FeedCard";
+import usePagFetch from "../../Hooks/usePagFetch";
+import FeedCard from "./FeedCard/FeedCard";
 import { CircularProgress } from "@mui/material";
-import { BASE_URL } from "../Helpers/sendRequest";
+import { apiUrl } from "../../config";
 
 const Home = () => {
   const [pageNumber, setPageNumber] = useState(0);
-  const url = `${BASE_URL}/feeds`;
+  const url = `${apiUrl}/feeds`;
   const {
     loading,
     results: feedPosts,
     hasMore,
-  } = useFetch("", pageNumber, 10, url);
+  } = usePagFetch("", pageNumber, 10, url);
 
   const observer = useRef();
-  const lastPostElementRef = useCallback(
+  const lastPostElementRef = useCallback( 
     (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();

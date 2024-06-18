@@ -1,7 +1,9 @@
 import ReactDOM from "react-dom";
+import PropTypes from "prop-types";
 import Backdrop from "./Backdrop";
-import PostCard from "./PostCard";
+import PostCard from "./PostCard/PostCard";
 import ImageContainer from "../Image/ImageContainer";
+import { ContainerCtxProvider } from "../Image/Context/container-context";
 
 export default function Modal(props) {
   return (
@@ -17,9 +19,17 @@ export default function Modal(props) {
         )}
       {props.title != "View Post" &&
         ReactDOM.createPortal(
-          <ImageContainer {...props} />,
+          <ContainerCtxProvider>
+            <ImageContainer {...props} />
+          </ContainerCtxProvider>,
           document.getElementById("overlay-root")
         )}
     </>
   );
 }
+
+
+Modal.propTypes = {
+  title: PropTypes.string.isRequired,
+  postId: PropTypes.string.isRequired,
+};
