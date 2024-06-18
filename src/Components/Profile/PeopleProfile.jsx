@@ -1,22 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import ProfilePosts from "./ProfilePosts";
+import { useState, useEffect } from "react";
+import ProfilePosts from "./Posts/ProfilePosts";
 import ProfileDesc from "./ProfileDesc";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
-import { BASE_URL } from "../Helpers/sendRequest";
+import { useParams } from "react-router-dom";
+import { apiUrl } from "../../config";
 
 export default function Profile() {
   const username = useParams().username;
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
-  const navigate = useNavigate();
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/${username}/posts`, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
+      const res = await axios.get(`${apiUrl}/${username}/posts`, {
+        withCredentials : true
       });
       setPosts(res.data);
     } catch (err) {
@@ -25,7 +22,7 @@ export default function Profile() {
   };
   const fetchUser = async () => {
     await axios
-      .get(`${BASE_URL}/users/${username}`)
+      .get(`${apiUrl}/users/${username}`)
       .then((res) => {
         setUser(res.data);
       })
@@ -43,7 +40,7 @@ export default function Profile() {
       <ProfileDesc user={user} posts={posts} />
       <div
         style={{ height: "1.7px" }}
-        className="w-full bg-stone-300 overflow-hidden"
+        className="w-full bg-stone-300 overflow-hidden my-2"
       ></div>
       <ProfilePosts posts={posts} />
     </div>

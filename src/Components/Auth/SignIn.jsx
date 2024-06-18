@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
-import { BASE_URL } from "../Helpers/sendRequest";
+import { apiUrl } from "../../config";
 
 const SignIn = () => {
   const usernameRef = useRef();
@@ -18,11 +18,9 @@ const SignIn = () => {
   const fetchPosts = async (username) => {
     try {
       const res = await axios.get(
-        `${BASE_URL}/${username}/posts`,
+        `${apiUrl}/${username}/posts`,
         {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
+          withCredentials : true
         }
       );
       dispatch(authActions.setPosts(res.data));
@@ -32,12 +30,13 @@ const SignIn = () => {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
     try {
       setError("");
       setLoading(true);
       const res = await axios.post(
-        `${BASE_URL}/users/login`,
+        `${apiUrl}/users/login`,
         {
           username: usernameRef.current.value,
           password: passwordRef.current.value,
@@ -46,26 +45,26 @@ const SignIn = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials : true
         }
       );
       dispatch(
         authActions.setAuthData({
-          token: res.data.token,
+          // token: res.data.token,
           name: res.data.user.name,
           email: res.data.user.email,
           username: res.data.user.username,
           avatarURL: res.data.user.avatarURL,
           id: res.data.user._id,
-          ...(res.data.user.bio && { bio: res.data.user.bio }),
+          bio: res.data.user.bio,
           age: res.data.user.age,
         })
       );
       navigate("/home");
-      const username = res.data.user.username;
-      fetchPosts(username);
+      
     } catch (er) {
       console.log(er);
-      setError("Failed to Login! Please verify the credentials");
+      setError(er.response.data.error)
     }
     setLoading(false);
   };

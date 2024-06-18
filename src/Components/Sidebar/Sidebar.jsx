@@ -1,35 +1,35 @@
-import Modal from "../UI/Modal";
-import SearchPeople from "./SearchPeople";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../Helpers/sendRequest";
+
+import Modal from "../UI/Modal";
+import SearchPeople from "./SearchPeople";
+import Notifications from "./Notifications";
+
 import {
   Logout,
-  PhoneAndroid,
-  DevicesOther,
   HomeOutlined,
   Home,
   Search,
   ExploreOutlined,
   Explore,
-  NotificationsOutlined,
   PersonOutlineOutlined,
   Person,
   Instagram,
   AddBoxOutlined,
-  FastForward,
 } from "@mui/icons-material";
 import "./SidebarUI.css";
-import Notifications from "./Notifications";
+import LogoutMenu from "./LogoutMenu";
+
+
 
 const Sidebar = () => {
   const [active, setActive] = useState("Home");
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [searchBar, setSearchBar] = useState(false);
   const [logoutMenu, setLogoutMenu] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
   const navigate = useNavigate();
+
+
   const handleClick = (e) => {
     const innerText = e.currentTarget.id;
     if (!["Create", "Search", "Notifications"].includes(innerText)) {
@@ -46,59 +46,13 @@ const Sidebar = () => {
       setSearchBar(false);
     }
   };
-  const logoutHandler = async () => {
-    setLoggingOut(true);
-    try {
-      await axios.post(
-        `${BASE_URL}/users/logout`,
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("name");
-      localStorage.removeItem("email");
-      localStorage.removeItem("avatarURL");
-      navigate("/signin");
-    } catch (err) {
-      console.log(err);
-    }
-    setLoggingOut(false);
-  };
-  const logoutAllHandler = async () => {
-    setLoggingOut(true);
-    try {
-      await axios.post(
-        `${BASE_URL}/users/logoutAll`,
-        {},
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("name");
-      localStorage.removeItem("email");
-      localStorage.removeItem("avatarURL");
-      navigate("/signin");
-    } catch (err) {
-      console.log(err.response.data.error);
-    }
-    setLoggingOut(false);
-  };
+
 
   return (
     <div className="md:w-1/5 w-14">
       {openCreatePost && (
         <Modal title="Create Post" openModalHandler={setOpenCreatePost} />
       )}
-      {/* <div className="md:w-1/5 w-12" /> */}
       <div
         className={`${
           !searchBar ? "md:w-full w-14" : "w-14"
@@ -119,10 +73,8 @@ const Sidebar = () => {
           <li
             id="logo"
             className={`${
-              searchBar
-                ? "md:block md:opacity-100 opacity-100 block"
-                : "md:hidden md:opacity-0 opacity-100 block"
-            } transition-all duration-500 ease-in-out mx-2.5 mt-1`}
+              searchBar ? "" : "md:hidden"
+            } transition-all mt-3 duration-500 ease-in-out flex justify-center`}
           >
             <Instagram fontSize="large" />
           </li>
@@ -232,30 +184,9 @@ const Sidebar = () => {
           </button>
         </div>
       </div>
-      <div
-        className={`flex flex-col absolute bottom-10 z-30 ${
-          logoutMenu ? "left-2 opacity-100" : "-left-44 opacity-0"
-        } transition-all duration-300 bg-stone-200 rounded-lg p-2 text-xs text-center`}
-      >
-        <button
-          onClick={logoutHandler}
-          disabled={loggingOut}
-          className="text-white bg-red-500 hover:bg-red-600 block px-1 py-0.5 rounded-md mb-3"
-        >
-          <PhoneAndroid />
-          {`  Logout`}
-        </button>
-        <button
-          onClick={logoutAllHandler}
-          disabled={loggingOut}
-          className="text-white bg-red-500 hover:bg-red-600 block px-1 py-0.5 rounded-md"
-        >
-          <DevicesOther />
-          {`  Logout from all Devices`}
-        </button>
-      </div>
+      <LogoutMenu logoutMenu={logoutMenu} />
       <SearchPeople active={searchBar} />
-      <Notifications active={active} />
+      {/* <Notifications active={active} /> */}
     </div>
   );
 };

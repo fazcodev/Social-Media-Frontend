@@ -3,7 +3,7 @@ import axios from "axios";
 import AvatarPNG from "../Assets/Default_Avatar.png";
 import { GroupAdd } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../Helpers/sendRequest";
+import { apiUrl } from "../../config";
 
 export default function Recommend() {
   const [suggestList, setSuggestList] = useState([]);
@@ -12,9 +12,12 @@ export default function Recommend() {
   const navigate = useNavigate();
   const fetchSuggestList = async () => {
     try {
-      const res = await axios.get(`${BASE_URL}/users/me/user-suggestions`, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-      });
+      const res = await axios.get(
+        `${apiUrl}/users/me/user-suggestions`,
+        {
+          withCredentials: true,
+        }
+      );
       setSuggestList(res.data);
     } catch (err) {
       console.log(err);
@@ -35,10 +38,10 @@ export default function Recommend() {
     try {
       await axios({
         method: e.currentTarget.innerText == "Follow" ? "post" : "delete",
-        url: `${BASE_URL}/users/${
+        url: `${apiUrl}/users/${
           person.username
         }/${e.currentTarget.innerText.toLowerCase()}`,
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        withCredentials: true,
       });
     } catch (err) {
       console.log(err);
@@ -59,10 +62,10 @@ export default function Recommend() {
       )}
       {suggestList.length > 0 && (
         <div
-          className={`img-wrapper tiny:mt-10 w-1/4 mmd:w-1/3 mtiny:w-1/2 ${
-            openList ? "mtiny:opacity-100" : "mtiny:opacity-0 mtiny:invisible"
-          } mtiny:rounded-md mtiny:absolute mtiny:top-16 mtiny:right-2 mtiny:bg-stone-200 transition-all duration-300 max-h-40 text-center ${
-            seeAll ? "overflow-y-scroll" : "overflow-hidden"
+          className={`pt-3 w-1/4 mmd:w-1/3 mtiny:w-1/2 ${
+            openList ? "mtiny:img-wrapper mtiny:opacity-100" : "mtiny:opacity-0 mtiny:invisible"
+          } mtiny:rounded-md mtiny:absolute mtiny:top-16 mtiny:right-2 mtiny:bg-stone-200 transition-all mtiny:max-h-40 duration-500 text-center ${
+            seeAll ? "overflow-y-scroll max-h-56" : "overflow-hidden max-h-40"
           }`}
         >
           <span className="text-sm font-semibold text-stone-400">
@@ -85,6 +88,7 @@ export default function Recommend() {
                     onClick={() => openUserProfile(person)}
                   >
                     <img
+                      alt="avatar"
                       className="h-10 w-10 mtiny:h-8 mtiny:w-8 rounded-full"
                       src={
                         person.avatarURL == undefined

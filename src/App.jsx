@@ -11,7 +11,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
-import EditProfile from "./Components/Profile/EditProfile";
+import EditProfile from "./Components/Profile/EditProfile/EditProfile";
 import PeopleProfile from "./Components/Profile/PeopleProfile";
 import Explore from "./Components/Explore/Explore";
 function App() {
@@ -28,8 +28,8 @@ function App() {
               </div>
             }
           >
-            <Route path="/home" element={<Home />} />
-            <Route path="/explore" element={<Explore />} />
+            <Route path="home" element={<Home />} />
+            <Route path="explore" element={<Explore />} />
           </Route>
           <Route
             path="/profile"
@@ -58,29 +58,3 @@ function App() {
 
 export default App;
 
-/*
-return (
-            <div
-              key={index}
-              onClick={() => setActivePost(post)}
-              className={`shrink-0 basis-[32%] ${
-                post.aspectRatio > 1.5 ? "row-span-2" : "aspect-square"
-              } relative overflow-hidden bg-black items-center flex cursor-pointer img-overlay`}
-              ref={posts.length === index + 1 ? lastPostElementRef : null}
-            >
-              <img className="w-full bg-cover" src={post.imageUrl} alt="post" />
-              <div className="middle text-white z-10">
-                <button>
-                  <FavoriteOutlined />
-                  {post.likesCount}
-                </button>
-                <button className="ml-5">
-                  <MapsUgc />
-                  {post.commentsCount}
-                </button>
-              </div>
-              <div className="overlay w-full h-full" />
-            </div>
-          );
-
-*/

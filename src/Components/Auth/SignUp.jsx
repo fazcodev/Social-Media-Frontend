@@ -4,7 +4,7 @@ import axios from "axios";
 import { Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
-import { BASE_URL } from "../Helpers/sendRequest";
+import { apiUrl } from "../../config";
 
 
 const SignUp = () => {
@@ -18,21 +18,7 @@ const SignUp = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const fetchPosts = async (username) => {
-    try {
-      const res = await axios.get(
-        `${BASE_URL}/${username}/posts`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        }
-      );
-      dispatch(authActions.setPosts(res.data));
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
@@ -43,7 +29,7 @@ const SignUp = () => {
       setError("");
       setLoading(true);
       const res = await axios.post(
-        `${BASE_URL}/users`,
+        `${apiUrl}/users`,
         {
           name: nameRef.current.value,
           username: usernameRef.current.value,
@@ -54,12 +40,13 @@ const SignUp = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
         }
       );
 
       dispatch(
         authActions.setAuthData({
-          token: res.data.token,
+          // token: res.data.token,
           email: res.data.user.email,
           name: res.data.user.name,
           username: res.data.user.username,
@@ -70,8 +57,6 @@ const SignUp = () => {
         })
       );
       navigate("/home");
-      const username = res.data.user.username;
-      fetchPosts(username);
     } catch (er) {
       console.log(er);
       setError(er.response.data.error);

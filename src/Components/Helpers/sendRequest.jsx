@@ -1,15 +1,11 @@
 import axios from "axios";
-// const BASE_URL = "http://localhost:3000/api";
-const BASE_URL = "https://social-media-rest-4xjz.onrender.com/api"
 
 const likePost = async (setLiked, setLikesCount, postId, reqType) => {
     try {
       await axios({
         method: 'post',
-        url: `${BASE_URL}/posts/${postId}/${reqType}`,
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
+        url: `${apiUrl}/posts/${postId}/${reqType}`,
+        withCredentials : true
 
       })
       setLiked(reqType == 'like');
@@ -23,10 +19,8 @@ const likePost = async (setLiked, setLikesCount, postId, reqType) => {
     try {
       await axios({
         method: reqType == 'save' ? 'post' : 'delete',
-        url: `${BASE_URL}/posts/${postId}/${reqType}`,
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
+        url: `${apiUrl}/posts/${postId}/${reqType}`,
+        withCredentials : true
       })
       setSaved(reqType == 'save');
     } catch (error) {
@@ -34,4 +28,4 @@ const likePost = async (setLiked, setLikesCount, postId, reqType) => {
     }
   };
 
-export { likePost, savePost, BASE_URL};
+export { likePost, savePost};

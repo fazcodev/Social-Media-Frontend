@@ -28,12 +28,13 @@ export function rotateSize(width, height, rotation) {
 /**
  * This function was adapted from the one in the ReadMe of https://github.com/DominicTobias/react-image-crop
  */
-export default async function getCroppedImg(
+export async function getCroppedImg(
   imageSrc,
   pixelCrop,
   rotation = 0,
   flip = { horizontal: false, vertical: false }
 ) {
+  // console.log(imageSrc)
   const image = await createImage(imageSrc)
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
@@ -99,3 +100,57 @@ export default async function getCroppedImg(
     }, 'image/jpeg')
   })
 }
+
+
+export const createImageBlob = async (imgURL) => {
+  // Apply the selected filter to the image element
+  const image = await createImage(imgURL);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  // set canvas size to match the bounding box
+  canvas.width = image.width;
+  canvas.height = image.height;
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  // As a blob
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(
+      (file) => {
+        resolve(file);
+      },
+      "image/jpeg",
+      100
+    );
+  });
+};
+
+
+export const applyFilter = async(imgRef)=>{
+  // Apply the selected filter to the image element
+  const image = await createImage(imgRef.current.src)
+  const canvas = document.createElement('canvas')
+  const ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled=true; 
+  ctx.imageSmoothingQuality='high';
+  // set canvas size to match the bounding box
+  canvas.width = image.width
+  canvas.height = image.height
+  
+  const computedStyle = window.getComputedStyle(imgRef.current);
+  const filter = computedStyle.getPropertyValue('filter')
+  const opacity = computedStyle.getPropertyValue('opacity')
+  ctx.filter = filter
+  ctx.opacity = opacity
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+  // As a blob
+  return new Promise((resolve, reject) => {
+    canvas.toBlob((file) => {
+      resolve(URL.createObjectURL(file))
+    }, 'image/jpeg', 100)
+  })
+  
+  
+};

@@ -1,17 +1,17 @@
 import { useState } from "react";
 import Modal from "../UI/Modal";
-import PostsGrid from "../Profile/PostsGrid";
-import useFetch from "../../Hooks/useFetch";
-import { BASE_URL } from "../Helpers/sendRequest";
+import PostsGrid from "../Profile/Posts/PostsGrid";
+import usePagFetch from "../../Hooks/usePagFetch";
+import { apiUrl } from "../../config";
 export default function Explore() {
   const [activePost, setActivePost] = useState(null); // [0, 1, 2, 3, 4
-  const explorePostsURL = `${BASE_URL}/explore`;
+  const explorePostsURL = `${apiUrl}/explore`;
   const [pageNumber, setPageNumber] = useState(0);
   const {
     loading,
     results: explorePosts,
     hasMore,
-  } = useFetch("", pageNumber, 3, explorePostsURL);
+  } = usePagFetch("", pageNumber, 3, explorePostsURL);
   return (
     <>
       {activePost && (
