@@ -133,7 +133,7 @@ const SignUp = () => {
           <div className="text-center">
             <button
               disabled={loading}
-              className="inline-block mx-auto text-white bg-blue-600 hover:bg-blue-700 shadow-[0px_2px_2px_1px_rgba(0,_0,_0,_0.16)] rounded-md py-1 px-2.5"
+              className={`inline-block mx-auto text-white ${loading ? 'bg-blue-300 cursor-wait' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'} shadow-[0px_2px_2px_1px_rgba(0,_0,_0,_0.16)] rounded-md py-1 px-2.5`}
               type="submit"
             >
               Sign Up

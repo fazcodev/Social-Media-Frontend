@@ -45,7 +45,7 @@ const LogoutMenu = ({logoutMenu}) => {
         <button
           onClick={() => logoutHandler("logout")}
           disabled={loggingOut}
-          className="text-white bg-red-500 hover:bg-red-600 block px-1 py-0.5 rounded-md mb-3"
+          className={`text-white ${loggingOut ? 'cursor-wait bg-red-300': 'cursor-pointer bg-red-500 hover:bg-red-600'} block px-1 py-0.5 rounded-md mb-3`}
         >
           <PhoneAndroid />
           {`  Logout`}
@@ -53,7 +53,7 @@ const LogoutMenu = ({logoutMenu}) => {
         <button
           onClick={() => logoutHandler("logoutAll")}
           disabled={loggingOut}
-          className="text-white bg-red-500 hover:bg-red-600 block px-1 py-0.5 rounded-md"
+          className={`text-white ${loggingOut ? 'cursor-wait bg-red-300': 'cursor-pointer bg-red-500 hover:bg-red-600'} block px-1 py-0.5 rounded-md`}
         >
           <DevicesOther />
           {`  Logout from all Devices`}
