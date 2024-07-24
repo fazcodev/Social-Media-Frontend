@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import axios from 'axios';
 import { apiUrl } from '../../config';
 
-const usePosts = (username, type) => {
+const useFetchPosts = (username, type) => {
     const [posts, setPosts] = useState([]);
   
     useEffect(() => {
@@ -21,4 +21,4 @@ const usePosts = (username, type) => {
     return posts;
   };
 
-export default usePosts
+export default useFetchPosts
