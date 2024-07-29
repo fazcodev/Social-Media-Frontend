@@ -18,7 +18,8 @@ const DeletePost = ({ post, modalHandler }) => {
     }
   };
   const queryClient = useQueryClient();
-  const mutation = useMutation(deletePost, {
+  const mutation = useMutation({
+    mutationFn: deletePost,
     onSuccess: () => {
       setDeleteWarning(false);
       if (modalHandler) modalHandler(null);
@@ -26,7 +27,7 @@ const DeletePost = ({ post, modalHandler }) => {
         predicate: (query) => {
           return (
             query.queryKey[0] === "profile" &&
-            ['posted', 'info'].includes(query.queryKey[2].type)  &&
+            ["posted", "info"].includes(query.queryKey[2].type) &&
             query.queryKey.includes(localStorage.getItem("username"))
           );
         },

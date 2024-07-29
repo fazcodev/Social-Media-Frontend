@@ -67,7 +67,7 @@ const PostCard = ({ postId, username, openModalHandler }) => {
                 <Moment fromNow>{post?.createdAt}</Moment>
               </div>
             </div>
-            {post?.owner === localStorage.getItem("id") && (
+            {post?.owner.username === localStorage.getItem("username") && (
               <DeletePost post={post} modalHandler={openModalHandler} />
             )}
           </div>
