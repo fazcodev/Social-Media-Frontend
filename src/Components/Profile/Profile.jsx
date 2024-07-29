@@ -4,13 +4,9 @@ import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import ProfilePosts from "./Posts/ProfilePosts";
 import ProfileDesc from "./ProfileDesc";
 import Recommend from "./Recommend";
-import useFetchPosts from "./useFetchPosts";
 import SavedPosts from "./Posts/SavedPosts";
 
 import { GridOnSharp, BookmarkBorderSharp } from "@mui/icons-material";
-
-
-
 
 export default function Profile() {
   const [navInfo, setNavInfo] = useState({ width: 0, left: 0 });
@@ -20,8 +16,6 @@ export default function Profile() {
   const outerRef = useRef(null);
   const username = localStorage.getItem("username");
 
-  const myPosts = useFetchPosts(username, "myPosts");
-  const savedPosts = useFetchPosts(username, "saved");
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
@@ -29,7 +23,8 @@ export default function Profile() {
         const elementRect = elementRef.current.getBoundingClientRect();
         setNavInfo({
           width: elementRect.width,
-          left: elementRect.left - entries[0].target.getBoundingClientRect().left,
+          left:
+            elementRect.left - entries[0].target.getBoundingClientRect().left,
         });
       }
     });
@@ -83,9 +78,9 @@ export default function Profile() {
           </div>
         </div>
         {location.pathname === "/profile/posts" ? (
-          <ProfilePosts posts={myPosts} />
+          <ProfilePosts username = {username} />
         ) : location.pathname === "/profile/saved" ? (
-          <SavedPosts posts={savedPosts} />
+          <SavedPosts username = {username} />
         ) : (
           navigate("/404")
         )}

@@ -1,6 +1,7 @@
-import { useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import axios from "axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 
 import CommentSection from "./Comment/CommentSection";
@@ -14,25 +15,34 @@ import "../../Image/ImageContainer.css";
 import CommentsList from "./Comment/CommentsList";
 import DeletePost from "./Delete/DeletePost";
 
-const PostCard = ({postId, openModalHandler})=>{
-  const [post, setPost] = useState({});
+const PostCard = ({ postId, username, openModalHandler }) => {
+  const queryClient = useQueryClient();
+  
   const [comments, setComments] = useState([]);
+  const { data: post } = useQuery({
+    queryKey: ["post", postId, {type: 'info'}],
+    queryFn: async () => {
+      const res = await axios.get(`${apiUrl}/posts/${postId}`, {
+        withCredentials: true,
+      });
+      return res.data;
+    },
+    initialData: () => {
+      const data = queryClient
+        .getQueryData(["profile", "posts", { type: "posted" }, username])
+        ?.pages?.find((pages) => pages.find((post) => post._id === postId));
+      return data?.at(0)
+    },
+    initialDataUpdatedAt: queryClient.getQueryState([
+      "profile",
+      "posts",
+      { type: "posted" },
+      username,
+    ])?.dataUpdatedAt,
+    staleTime: 5000 * 60,
+    refetchOnWindowFocus: false,
+  });
 
-  // console.log(post)
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await axios.get(`${apiUrl}/posts/${postId}`, {
-          withCredentials: true,
-        });
-        setPost(res.data);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    fetchPost();
-  }, [postId]);
 
   return (
     <>
@@ -45,7 +55,9 @@ const PostCard = ({postId, openModalHandler})=>{
                 className="w-8 h-8 rounded-full"
                 alt="User Avatar"
                 src={
-                  post?.owner?.avatarUrl ? post?.owner?.avatarUrl : defaultAvatar
+                  post?.owner?.avatarURL
+                    ? post?.owner?.avatarURL
+                    : defaultAvatar
                 }
               />
               <div className="font-bold mtiny:font-semibold mtiny:text-base">
@@ -55,7 +67,9 @@ const PostCard = ({postId, openModalHandler})=>{
                 <Moment fromNow>{post?.createdAt}</Moment>
               </div>
             </div>
-            <DeletePost post={post} modalHandler={openModalHandler} />
+            {post?.owner === localStorage.getItem("id") && (
+              <DeletePost post={post} modalHandler={openModalHandler} />
+            )}
           </div>
           <CommentsList
             postId={postId}
@@ -67,15 +81,15 @@ const PostCard = ({postId, openModalHandler})=>{
             cls="w-full p-1 flex items-center border-t border-stone-400"
             comment={true}
             postId={postId}
-            addCommentHandler={setComments}
+            // addCommentHandler={setComments}
           />
         </div>
       </div>
     </>
   );
-}
+};
 
-export default PostCard
+export default PostCard;
 
 PostCard.propTypes = {
   postId: PropTypes.string.isRequired,

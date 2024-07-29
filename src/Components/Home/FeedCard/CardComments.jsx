@@ -10,6 +10,7 @@ const CardComments = ({ post }) => {
     <>
       {openPostModal && (
         <Modal
+          username = {post.owner.username}
           postId={post._id}
           title="View Post"
           openModalHandler={setOpenPostModal}
@@ -28,7 +29,7 @@ const CardComments = ({ post }) => {
         setCount={setCommentsCount}
         comment={true}
         class="flex"
-        post={post}
+        postId={post._id}
       />
     </>
   );

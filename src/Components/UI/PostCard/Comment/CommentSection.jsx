@@ -1,20 +1,19 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import PropTypes from 'prop-types'
-
-
-
+import PropTypes from "prop-types";
+import { v4 as uuid } from "uuid";
+import { fetchComments } from "../../../../Utils/FetchUtils";
 import { captionActions } from "../../../../Store/ImageEditor";
-import {apiUrl} from "../../../../config"
-import EmojiPicker from "./EmojiPicker"
+import { apiUrl } from "../../../../config";
+import EmojiPicker from "./EmojiPicker";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-
-export default function CommentSection({comment, cls, addCommentHandler, setCount, postId}) {
+export default function CommentSection({ comment, cls, setCount, postId }) {
   const dispatch = useDispatch();
   const { caption } = useSelector((state) => state.caption);
   const [myComment, setMyComment] = useState("");
-
+  const queryClient = useQueryClient();
   const onTextChange = (e) => {
     if (comment != undefined) {
       setMyComment(e.currentTarget.value);
@@ -24,30 +23,94 @@ export default function CommentSection({comment, cls, addCommentHandler, setCoun
       dispatch(captionActions.setCaption(e.currentTarget.value));
     }
   };
-  
+
   const commentHandler = async () => {
     try {
       const res = await axios.post(
         `${apiUrl}/posts/${postId}/comment`,
-        {
-          text: myComment,
-        },
-        {
-          withCredentials : true,
-        }
+        { text: myComment },
+        { withCredentials: true }
       );
-      setMyComment("");
-      if (setCount != undefined) setCount((prev) => prev + 1);
-      addCommentHandler((prev) => [...prev, res.data]);
+      return res.data;
     } catch (e) {
       console.log(e);
     }
+  };
+  const mutation = useMutation({
+    mutationFn: commentHandler,
+    onMutate: async () => {
+      const optimisticComment = {
+        _id: uuid(),
+        text: myComment,
+        user: {
+          name: localStorage.getItem("name"),
+          username: localStorage.getItem("username"),
+          avatarURL: localStorage.getItem("avatarURL")
+            ? localStorage.getItem("avatarURL")
+            : null,
+          _id: localStorage.getItem("id"),
+        },
+        createdAt: "temp",
+      };
+      const { pages: prevCommentPages, pageParams } =
+        await queryClient.getQueryData(["post", postId, { type: "comments" }]);
+      // console.log(pageParams);
+      await queryClient.setQueryData(
+        ["post", postId, { type: "comments" }],
+        ({ pages: [firstPage, ...restPages], pageParams }) => {
+          console.log(firstPage);
+          return {
+            pages: [[optimisticComment, ...firstPage], ...restPages],
+            pageParams,
+          };
+        }
+      );
+
+      return { prevCommentPages };
+    },
+    onError: (err, variables, context) => {
+      console.log(err);
+      queryClient.setQueryData(
+        ["post", postId, { type: "comments" }],
+        context.prevCommentPages
+      );
+    },
+    onSettled: (data, variables, context) => {
+      setMyComment("");
+      setCount((prev) => prev + 1);
+      queryClient.setQueryData(
+        ["post", postId, { type: "comments" }],
+        ({ pages: [firstPage, ...restPages], pageParams }) => {
+          return {
+            pages: [
+              [data, ...firstPage.slice(1, firstPage.length)],
+              ...restPages,
+            ],
+            pageParams,
+          };
+        }
+      );
+    },
+  });
+  const prefetchComments = async () => {
+    queryClient.prefetchInfiniteQuery({
+      queryKey: ["post", postId, { type: "comments" }],
+      queryFn: async (...args) => {
+        const data = await fetchComments(postId, ...args);
+        return data;
+      },
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, pages) => {
+        if (lastPage?.length < 10) return null;
+        return pages.length;
+      },
+    });
   };
   return (
     <div className={`${cls ? cls : ""}`}>
       <textarea
         // style={{ height: "80%" }}
-
+        onFocus={prefetchComments}
         rows={comment == undefined ? 5 : 2}
         value={comment != undefined ? myComment : caption}
         onChange={onTextChange}
@@ -58,7 +121,7 @@ export default function CommentSection({comment, cls, addCommentHandler, setCoun
       />
 
       <div className="flex h-fit relative justify-between">
-        <EmojiPicker comment = {comment} setMyComment = {setMyComment}/>
+        <EmojiPicker comment={comment} setMyComment={setMyComment} />
         <div
           className={`${
             caption.length || myComment.length ? "opacity-100" : "opacity-50"
@@ -69,9 +132,12 @@ export default function CommentSection({comment, cls, addCommentHandler, setCoun
           )}
           {comment != undefined && myComment.length > 0 && (
             <button
-              disabled={!(caption.length || myComment.length)}
-              className="text-blue-500 font-semibold text-lg ml-3 disabled:opacity-50"
-              onClick={commentHandler}
+              disabled={
+                (caption.length == 0 && myComment.length == 0) ||
+                mutation.isPending
+              }
+              className="text-blue-500 font-semibold text-lg ml-3 disabled:opacity-30 hover:text-blue-600"
+              onClick={mutation.mutate}
             >
               Post
             </button>
@@ -82,11 +148,9 @@ export default function CommentSection({comment, cls, addCommentHandler, setCoun
   );
 }
 
-
 CommentSection.propTypes = {
   comment: PropTypes.bool,
   cls: PropTypes.string,
-  addCommentHandler: PropTypes.func,
   setCount: PropTypes.func,
-  postId: PropTypes.string
+  postId: PropTypes.string,
 };

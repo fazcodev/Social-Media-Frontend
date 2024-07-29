@@ -14,7 +14,7 @@ const LikePostAnimation = ({post}) => {
 
     const handleLikeAnimation = () => {
         setHeartActive(true);
-        if (!liked) likePost(post?._id, "like");
+        if (!liked) likePost({postId: post?._id, reqType: "like"});
         setTimeout(() => {
           setHeartActive(false);
         }, 1100);

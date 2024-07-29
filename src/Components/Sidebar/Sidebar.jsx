@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Modal from "../UI/Modal";
 import SearchPeople from "./SearchPeople";
@@ -19,6 +19,8 @@ import {
 } from "@mui/icons-material";
 import "./SidebarUI.css";
 import LogoutMenu from "./LogoutMenu";
+import { useQueryClient } from "@tanstack/react-query";
+import { prefetchProfile } from "../../Utils/FetchUtils";
 
 
 
@@ -28,14 +30,15 @@ const Sidebar = () => {
   const [searchBar, setSearchBar] = useState(false);
   const [logoutMenu, setLogoutMenu] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-
+  const queryClient = useQueryClient();
   const handleClick = (e) => {
     const innerText = e.currentTarget.id;
     if (!["Create", "Search", "Notifications"].includes(innerText)) {
       if (innerText == "Home") navigate("/home");
       else if (innerText == "Profile") navigate("/profile/posts");
-      else navigate("/" + innerText);
+      else navigate("/" + innerText.toLowerCase());
     }
     if (innerText == "Create") {
       setOpenCreatePost(true);
@@ -85,7 +88,7 @@ const Sidebar = () => {
               searchBar ? "justify-center" : ""
             } cursor-pointer sidebarItem`}
           >
-            {active == "Home" ? (
+            {location.pathname == "/home" ? (
               <Home fontSize="large" />
             ) : (
               <HomeOutlined fontSize="large" />
@@ -121,7 +124,7 @@ const Sidebar = () => {
               searchBar ? "justify-center" : ""
             } cursor-pointer sidebarItem`}
           >
-            {active == "Explore" ? (
+            {location.pathname == "/explore" ? (
               <Explore fontSize="large" />
             ) : (
               <ExploreOutlined fontSize="large" />
@@ -159,12 +162,13 @@ const Sidebar = () => {
           </li>
           <li
             id="Profile"
+            onMouseEnter={()=>prefetchProfile(localStorage.getItem('username'), queryClient)}
             onClick={handleClick}
             className={` border-stone-200 mx-1 p-1 hover:bg-stone-200 transition-all rounded-md flex items-center mmd:justify-center ${
               searchBar ? "justify-center" : ""
             } cursor-pointer sidebarItem`}
           >
-            {active == "Profile" ? (
+            {location.pathname.startsWith("/profile/") ? (
               <Person fontSize="large" />
             ) : (
               <PersonOutlineOutlined fontSize="large" />

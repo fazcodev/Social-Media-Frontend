@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { apiUrl } from "../../config";
 import usePagFetch from "../../Hooks/usePagFetch";
@@ -9,10 +10,11 @@ import { Search } from "@mui/icons-material";
 import UserCard from "./UserCard";
 
 const SearchPeople = ({ active }) => {
-  const [followings, setFollowings] = useState([]);
-  const [disabled, setDisabled] = useState(false);
+  const queryClient = useQueryClient();
+  // const [followings, setFollowings] = useState([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [query, setQuery] = useState("");
+  const searchRef = useRef();
   const url = `${apiUrl}/users/search`;
   const { loading, results: searchResults } = usePagFetch(
     query,
@@ -20,28 +22,40 @@ const SearchPeople = ({ active }) => {
     10,
     url
   );
-
+  const {data: followings, isLoading} = useQuery({
+    queryKey: ["profile", 'desc', {type: 'followings'}, localStorage.getItem("username")],
+    queryFn: ()=>fetchFollowings(localStorage.getItem("username")),
+    enabled: localStorage.getItem("username") ? true : false,
+    staleTime: 5000*60
+  })
   useEffect(() => {
-    fetchFollowings(localStorage.getItem("username")).then((res) => {
-      setFollowings(res);
-    });
-  }, []);
+    if(searchRef.current && active){
+      searchRef.current.focus();
+    }
+  }, [searchRef.current, active]);
 
-  const userHandler = async (username, req) => {
-    setDisabled(true);
-    await axios({
-      method: req == "follow" ? "post" : "delete",
-      url: `${apiUrl}/users/${username}/${req}`,
-      withCredentials: true,
-    })
-      .then((res) => {
-        fetchFollowings(localStorage.getItem("username"));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    setDisabled(false);
-  };
+  
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const fetchState = queryClient.getQueryState([
+  //       "profile",
+  //       localStorage.getItem("username"),
+  //       "followings",
+  //     ]);
+  //     if (fetchState?.data && !fetchState.isInvalidated) {
+  //       console.log(fetchState.data);
+  //       setFollowings(fetchState.data);
+  //     } else {
+  //       const { data } = await queryClient.fetchQuery({
+  //         queryKey: ["profile", localStorage.getItem("username"), "followings"],
+  //         queryFn: ()=>fetchFollowings(localStorage.getItem("username")),
+  //       });
+  //       setFollowings(data);
+  //     }
+  //   };
+  //   if(query.length == 1)fetchData();
+  // }, [query]);
 
   return (
     <div
@@ -53,11 +67,13 @@ const SearchPeople = ({ active }) => {
     >
       <div className="w-full bg-white rounded-lg shadow px-2 py-3 flex">
         <input
+          ref={searchRef}
           type="text"
           placeholder="Search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full outline-none"
+          
         />
         <Search className="text-stone-300" />
       </div>
@@ -69,9 +85,7 @@ const SearchPeople = ({ active }) => {
               key={user._id}
               user={user}
               followings={followings}
-              userHandler={userHandler}
-              disabled={disabled}
-              loading={loading}
+              loading={loading || isLoading}
             />
           ))}
         </div>

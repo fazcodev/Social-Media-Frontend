@@ -36,6 +36,7 @@ const ProfileInfo = () => {
           Username
         </label>
         <input
+          autoComplete="off"
           type="text"
           id="username"
           name="username"
@@ -62,6 +63,7 @@ const ProfileInfo = () => {
           Name
         </label>
         <input
+          autoComplete="off"
           type="text"
           id="name"
           name="name"
@@ -79,6 +81,7 @@ const ProfileInfo = () => {
           Age
         </label>
         <input
+          
           type="number"
           id="age"
           name="age"
@@ -116,6 +119,7 @@ const ProfileInfo = () => {
           Email
         </label>
         <input
+          autoComplete="off"
           type="email"
           id="email"
           name="email"
@@ -127,7 +131,7 @@ const ProfileInfo = () => {
       </div>
       <button
         disabled={loading}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         type="submit"
       >
         Save
