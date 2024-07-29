@@ -65,6 +65,6 @@ const EmojiPicker = ({ comment, setMyComment }) => {
 export default EmojiPicker;
 
 EmojiPicker.propTypes = {
-  comment: PropTypes.string,
+  comment: PropTypes.bool,
   setMyComment: PropTypes.func,
 };

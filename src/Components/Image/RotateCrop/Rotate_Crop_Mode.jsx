@@ -69,7 +69,7 @@ const Rotate_Crop_Mode = (props) => {
 
           <Slider
             sx = {{color: 'white'}}
-            className = {`${buttonControls[1]?'hover:opacity-100 opacity-60':'opacity-0'} text-white transition-all`}
+            className = {`${buttonControls[1]?'hover:opacity-100 opacity-60':'opacity-0 invisible'} text-white transition-all duration-[400ms]`}
             value={cropOptions.zoom}
             min={1}
             max={3}
@@ -87,8 +87,8 @@ const Rotate_Crop_Mode = (props) => {
         <div className="w-1/5">
 
           <Slider
-            sx = {{color: 'white', opacity: `${buttonControls[2]?'60%':'0'}`}}
-            className = {`${buttonControls[2]?'hover:opacity-100':''} transition-all`}
+            sx = {{color: 'white'}}
+            className = {`${buttonControls[2]?'hover:opacity-100 opacity-60':'opacity-0 invisible'} transition-all duration-[400ms]`}
             value={cropOptions.rotation}
             min={0}
             max={360}

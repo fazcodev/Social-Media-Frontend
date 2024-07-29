@@ -1,8 +1,8 @@
 import { useEffect, useRef, useContext } from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 import { cropModeActions } from "../../Store/ImageEditor";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { ContainerContext } from "./Context/container-context";
 
 import Rotate_Crop_Mode from "./RotateCrop/Rotate_Crop_Mode";
@@ -15,11 +15,14 @@ import { AddPhotoAlternateOutlined } from "@mui/icons-material";
 
 import "./ImageContainer.css";
 
-
-
 const ImageContainer = (props) => {
-
-  const {menuIdx, isImageUploaded, uploadingPost, setMenuIdx, setIsImageUploaded} = useContext(ContainerContext);
+  const {
+    menuIdx,
+    isImageUploaded,
+    uploadingPost,
+    setMenuIdx,
+    setIsImageUploaded,
+  } = useContext(ContainerContext);
   const dispatch = useDispatch();
 
   const menu = [
@@ -40,20 +43,20 @@ const ImageContainer = (props) => {
       buttons: ["Back", "Share"],
     },
   ];
-  
+
   // const [menuIdx, setMenuIdx] = useState(0);
   const editModeRef = useRef(null);
-  
 
   const onFileUpload = (e) => {
     if (e.target.files[0]) {
       // setImage(URL.createObjectURL(e.target.files[0]));
       // console.log(URL.createObjectURL(e.target.files[0]));
-      dispatch(cropModeActions.setCroppedImage(URL.createObjectURL(e.target.files[0])));
+      dispatch(
+        cropModeActions.setCroppedImage(URL.createObjectURL(e.target.files[0]))
+      );
       // console.log(cropMode.croppedImage)
       setIsImageUploaded(true);
-    }
-    else{
+    } else {
       dispatch(cropModeActions.setCroppedImage(null));
       setIsImageUploaded(false);
     }
@@ -75,14 +78,35 @@ const ImageContainer = (props) => {
     >
       {uploadingPost != 0 ? (
         uploadingPost == 1 ? (
-          <CircularProgress fontSize='large' className="scale-150 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 " />
+          <CircularProgress
+            fontSize="large"
+            className="scale-150 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 "
+          />
+        ) : //display a success message using material ui
+        uploadingPost == 2 ? (
+          <Alert
+            sx={{ fontSize: "20px" }}
+            className="w-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            severity="success"
+          >
+            {props.title == "Edit Avatar" ? "Avatar Updated Successfully" : "Post Uploaded Successfully"}
+          </Alert>
         ) : (
-          //display a success message using material ui
-          uploadingPost == 2 ? <Alert sx = {{fontSize: '20px'}} className="w-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" severity="success">Post Uploaded Successfully</Alert> : <Alert sx = {{fontSize: '20px'}} className="w-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" severity="error">Post Uploading Failed</Alert>
+          <Alert
+            sx={{ fontSize: "20px" }}
+            className="w-3/4 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            severity="error"
+          >
+            {props.title == "Edit Avatar" ? "Failed Updating Avatar" : "Failed Uploading Post"}
+          </Alert>
         )
       ) : (
         <>
-          <ContainerMenu menu = {menu} title = {props.title} editModeRef = {editModeRef}/>
+          <ContainerMenu
+            menu={menu}
+            title={props.title}
+            editModeRef={editModeRef}
+          />
           {isImageUploaded &&
             ((menu[menuIdx].title == "Crop" && (
               <Rotate_Crop_Mode title={props.title} />
@@ -116,7 +140,6 @@ const ImageContainer = (props) => {
 
 export default ImageContainer;
 
-
 ImageContainer.propTypes = {
   title: PropTypes.string.isRequired,
-}
+};

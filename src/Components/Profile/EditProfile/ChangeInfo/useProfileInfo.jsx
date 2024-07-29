@@ -1,10 +1,11 @@
 // useProfileInfo.js
-
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { apiUrl } from "../../../../config";
 
 const useProfileInfo = () => {
+  const queryClient = useQueryClient();
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -82,12 +83,21 @@ const useProfileInfo = () => {
       })
     );
 
+    queryClient.setQueryData(['profile', 'desc', {type: 'info'}, localStorage.getItem('username')], (oldData)=>{
+      return{
+        ...oldData,
+        name: userData.name || oldData.name,
+        email: userData.email || oldData.email,
+        username: userData.username || oldData.username,
+        age: userData.age || oldData.age,
+        bio: userData.bio || oldData.bio,
+      }
+    })
     if (userData.username) localStorage.setItem("username", userData.username);
     if (userData.name) localStorage.setItem("name", userData.name);
     if (userData.email) localStorage.setItem("email", userData.email);
     if (userData.age) localStorage.setItem("age", userData.age);
     if (userData.bio) localStorage.setItem("bio", userData.bio);
-
     try {
       await axios.patch(
         `${apiUrl}/users/me`,

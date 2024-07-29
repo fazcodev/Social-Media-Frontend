@@ -9,28 +9,46 @@ import {
 } from "@mui/icons-material";
 
 const LikeSavePost = ({ post }) => {
-  const { liked, likePost } = useLikePost(post);
-  const { saved, savePost } = useSavePost(post);
+  const { liked, likePost, isPending: pendingLike } = useLikePost(post);
+  const { saved, savePost, isPending: pendingSave } = useSavePost(post);
 
   return (
     <div className="flex justify-start gap-2 px-1 py-1.5">
       <button
         onClick={
           liked
-            ? () => likePost(post?._id, "unlike")
-            : () => likePost(post?._id, "like")
+            ? () => likePost({ postId: post?._id, reqType: "unlike" })
+            : () => likePost({ postId: post?._id, reqType: "like" })
         }
+        disabled={pendingLike}
       >
-        {liked ? <Favorite className="text-red-600" /> : <FavoriteBorder />}
+        {liked ? (
+          <Favorite
+            className={`text-red-600 ${
+              pendingLike ? "opacity-50" : "opacity-100"
+            }`}
+          />
+        ) : (
+          <FavoriteBorder
+            className={`${pendingLike ? "opacity-50" : "opacity-100"}`}
+          />
+        )}
       </button>
       <button
         onClick={
           saved
-            ? () => savePost(post?._id, "unsave")
-            : () => savePost(post?._id, "save")
+            ? () => savePost({ postId: post?._id, reqType: "unsave" })
+            : () => savePost({ postId: post?._id, reqType: "save" })
         }
+        disabled={pendingSave}
       >
-        {saved ? <Bookmark /> : <BookmarkBorder />}
+        {saved ? (
+          <Bookmark className={`${pendingSave ? "opacity-50" : "opacity-100"}`} />
+        ) : (
+          <BookmarkBorder
+            className={`${pendingSave ? "opacity-50" : "opacity-100"}`}
+          />
+        )}
       </button>
     </div>
   );

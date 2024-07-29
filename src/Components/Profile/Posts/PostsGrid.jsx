@@ -3,9 +3,16 @@ import PropTypes from "prop-types";
 import "../../UI/ImageOverlay.css";
 import { FavoriteOutlined, MapsUgc } from "@mui/icons-material";
 import { Skeleton } from "@mui/material";
-
+import {v4 as uuid} from 'uuid'
 export default function PostsGrid(props) {
-  const { setPageNumber, loading, hasMore, posts, setActivePost } = props;
+  const {
+    setPageNumber,
+    fetchNextPage,
+    loading,
+    hasMore,
+    postPages,
+    setActivePost,
+  } = props;
   const observer = useRef();
 
   const lastPostElementRef = useCallback(
@@ -15,7 +22,7 @@ export default function PostsGrid(props) {
       observer.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting && hasMore) {
-            setPageNumber((prevPageNumber) => prevPageNumber + 1);
+            if (fetchNextPage && hasMore) fetchNextPage();
           }
         },
         { rootMargin: "200px" }
@@ -25,39 +32,38 @@ export default function PostsGrid(props) {
     [loading, hasMore, setPageNumber]
   );
 
-  
-
   return (
     <div className="grid grid-flow-row grid-cols-3 gap-1">
-      
-      {posts.length > 0 &&
-        posts.map((post, idx) => (
-          <div
-            key={idx}
-            onClick={() => setActivePost(post?._id)}
-            className={`aspect-square relative overflow-hidden bg-black cursor-pointer flex items-center img-overlay`}
-            ref={posts.length === idx + 1 ? lastPostElementRef : null}
-          >
-            <img
-              className="w-full h-full object-cover"
-              src={post.imageUrl}
-              alt="post"
-            />
+      {postPages?.length > 0 &&
+        postPages.map((posts, idx) =>
+          posts.map((post, pid) => (
+            <div
+              key={post._id}
+              onClick={() => setActivePost(post?._id)}
+              className={`aspect-square relative overflow-hidden bg-black cursor-pointer flex items-center img-overlay`}
+              ref={(postPages?.length === idx + 1 && pid=== 0) ? lastPostElementRef : null}
+            >
+              <img
+                className="w-full h-full object-cover"
+                src={post.imageUrl}
+                alt="post"
+              />
 
-            <div className="middle text-white text-center z-10">
-              <button>
-                <FavoriteOutlined />
-                {post.likesCount}
-              </button>
-              <button className="ml-5 mtiny:ml-2">
-                <MapsUgc />
-                {post.commentsCount}
-              </button>
+              <div className="middle w-full text-center text-white z-10">
+                <button>
+                  <FavoriteOutlined/>
+                  {post.likesCount}
+                </button>
+                <button className="ml-5 mtiny:ml-2">
+                  <MapsUgc/>
+                  {post.commentsCount}
+                </button>
+              </div>
+              <div className="overlay w-full h-full" />
             </div>
-            <div className="overlay w-full h-full" />
-          </div>
-        ))}
-      {hasMore && (
+          ))
+        )}
+      {loading && (
         <>
           <Skeleton
             variant="rectangular"
