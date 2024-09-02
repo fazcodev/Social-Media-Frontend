@@ -5,7 +5,7 @@ import { Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
 import { apiUrl } from "../../config";
-
+import AuthBg from '../Assets/AuthBg.jpg'
 
 const SignUp = () => {
   const emailRef = useRef();
@@ -65,10 +65,10 @@ const SignUp = () => {
 
   };
   return (
-    <div className="flex justify-center items-center">
-      <div className="text-center rounded-lg shadow-[0px_3px_6px_6px_rgba(0,_0,_0,_0.16)] p-4 w-1/3 mtiny:w-4/5 my-5">
-        <h1 className="text-3xl">SignUp</h1>
-        <form className="text-left my-5" onSubmit={handleSubmit}>
+    <div className="flex justify-center items-center h-screen bg-cover bg-no-repeat bg-center" style={{backgroundImage: `url(${AuthBg})`}}>
+      <div className="text-center border-neutral-500 border-2 rounded-xl bg-gray-100 bg-opacity-90 shadow-[0px_3px_6px_6px_rgba(0,_0,_0,_0.16)] px-4 py-8 w-1/3 mtiny:w-4/5 my-5">
+        <h1 className="text-4xl font-semibold">SignUp</h1>
+        <form className="text-left text-xl my-5" onSubmit={handleSubmit}>
           {error && <Alert severity="error">{error}</Alert>}
           <label htmlFor="username">
             <b>Email</b>
@@ -130,7 +130,7 @@ const SignUp = () => {
             type="password"
             required
           ></input>
-          <div className="text-center">
+          <div className="text-center font-medium">
             <button
               disabled={loading}
               className={`inline-block mx-auto text-white ${loading ? 'bg-blue-300 cursor-wait' : 'bg-blue-600 hover:bg-blue-700 cursor-pointer'} shadow-[0px_2px_2px_1px_rgba(0,_0,_0,_0.16)] rounded-md py-1 px-2.5`}
@@ -140,7 +140,7 @@ const SignUp = () => {
             </button>
           </div>
         </form>
-        <div className="text-blue-600">
+        <div className="text-blue-600 text-base">
           Already have an account ?{" "}
           <Link to="/signin" className="font-bold hover:text-blue-700">
             Login
