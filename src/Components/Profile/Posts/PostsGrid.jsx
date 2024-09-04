@@ -1,9 +1,11 @@
 import { useRef, useCallback } from "react";
 import PropTypes from "prop-types";
+import { useQueryClient } from "@tanstack/react-query";
 import "../../UI/ImageOverlay.css";
 import { FavoriteOutlined, MapsUgc } from "@mui/icons-material";
 import { Skeleton } from "@mui/material";
-import {v4 as uuid} from 'uuid'
+import { v4 as uuid } from "uuid";
+import { fetchPost } from "../../../Utils/FetchUtils";
 export default function PostsGrid(props) {
   const {
     setPageNumber,
@@ -32,6 +34,47 @@ export default function PostsGrid(props) {
     [loading, hasMore, setPageNumber]
   );
 
+
+  const queryClient = useQueryClient();
+
+  const prefetchPost = async (post) => {
+    /* await queryClient.prefetchQuery({
+      queryKey: ["post", post._id, { type: "info" }],
+      queryFn: async () => await fetchPost(post._id),
+      initialData: async() => {
+        return queryClient
+          .getQueryData(["profile", "posts", { type: "posted" }, post.owner.username])
+          ?.pages.flat()
+          .find((p) => p._id === post._id);
+        // return data;
+      },
+      initialDataUpdatedAt: queryClient.getQueryState([
+        "profile",
+        "posts",
+        { type: "posted" },
+        post.owner.username
+      ])?.dataUpdatedAt,
+      staleTime: 5000 * 60,
+    }); */
+
+    await queryClient.prefetchInfiniteQuery({
+      queryKey: ["post", post._id, { type: "comments" }],
+      queryFn: async (...args) => {
+        const data = await fetchComments(post._id, ...args);
+        if (args[0].pageParam == 0) {
+          bottomRef.current?.scrollIntoView({ behavior: "auto" });
+        }
+        return data;
+      },
+      getNextPageParam: (lastPage, pages) => {
+        if (lastPage?.length < 10) return null;
+        return pages.length;
+      },
+      initialPageParam: 0,
+      pages: 1,
+    });
+  };
+
   return (
     <div className="grid grid-flow-row grid-cols-3 gap-1">
       {postPages?.length > 0 &&
@@ -39,9 +82,14 @@ export default function PostsGrid(props) {
           posts.map((post, pid) => (
             <div
               key={post._id}
-              onClick={() => setActivePost(post?._id)}
+              onClick={() => setActivePost(post)}
+              onMouseEnter={() => prefetchPost(post)}
               className={`aspect-square relative overflow-hidden bg-black cursor-pointer flex items-center img-overlay`}
-              ref={(postPages?.length === idx + 1 && pid=== 0) ? lastPostElementRef : null}
+              ref={
+                postPages?.length === idx + 1 && pid === 0
+                  ? lastPostElementRef
+                  : null
+              }
             >
               <img
                 className="w-full h-full object-cover"
@@ -51,11 +99,11 @@ export default function PostsGrid(props) {
 
               <div className="middle w-full text-center text-white z-10">
                 <button>
-                  <FavoriteOutlined/>
+                  <FavoriteOutlined />
                   {post.likesCount}
                 </button>
                 <button className="ml-5 mtiny:ml-2">
-                  <MapsUgc/>
+                  <MapsUgc />
                   {post.commentsCount}
                 </button>
               </div>

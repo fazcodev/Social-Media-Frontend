@@ -16,12 +16,10 @@ const useButtons = (menu, title) => {
   const { caption } = useSelector((state) => state.caption);
   const cropMode = useSelector((state) => state.cropMode);
   const containerCtx = useContext(ContainerContext);
-  const editedImage = useSelector((state) => state.editMode.editedImage);
   const queryClient = useQueryClient();
 
-  const dispatch = useDispatch();
 
-  const token = localStorage.getItem("token");
+  const dispatch = useDispatch();
 
   const editButton = async () => {
     try {
@@ -48,14 +46,12 @@ const useButtons = (menu, title) => {
     containerCtx.setMenuIdx((menuIdx) => menuIdx + 1);
   };
 
-  const shareButton = async () => {
+  const shareButton = async (editedImgURL) => {
     containerCtx.setUploadingPost(1);
     const formData = new FormData();
-    // props.openModalHandler(false);
-    const newImageBlob = await createImageBlob(editedImage);
+    const newImageBlob = await createImageBlob(editedImgURL);
     formData.append("description", caption);
     formData.append("image", newImageBlob, "image.jpeg");
-    // console.log('hello')
     try {
       const res = await axios.post(
         `${
@@ -71,11 +67,12 @@ const useButtons = (menu, title) => {
           withCredentials: true,
         }
       );
+
       queryClient.invalidateQueries({
         predicate: (query) => {
           return (
             query.queryKey[0] === "profile" &&
-            ['posted', 'info'].includes(query.queryKey[2].type) &&
+            ["posted", "info"].includes(query.queryKey[2].type) &&
             query.queryKey.includes(localStorage.getItem("username"))
           );
         },
@@ -87,7 +84,7 @@ const useButtons = (menu, title) => {
         // also update the avatarURL in the redux store using dispatch
         dispatch(
           authActions.setAuthData({
-            token: token,
+            id: res.data._id,
             email: res.data.email,
             name: res.data.name,
             username: res.data.username,
@@ -99,6 +96,7 @@ const useButtons = (menu, title) => {
       containerCtx.setUploadingPost(3);
       console.log(e);
     }
+    dispatch(editModeActions.setEditedImage(null));
   };
 
   const backButton = () => {

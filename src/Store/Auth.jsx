@@ -11,7 +11,6 @@ const authSlice = createSlice({
     id: null,
     bio: null,
     age: null,
-    posts: [],
   },
   reducers: {
     setAuthData(state, action) {
@@ -33,9 +32,6 @@ const authSlice = createSlice({
       state.id = action.payload.id;
       state.bio = action.payload.bio;
       state.age = action.payload.age;
-    },
-    setPosts(state, action) {
-      state.posts = action.payload;
     },
   },
 });

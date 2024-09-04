@@ -47,6 +47,7 @@ const DeletePost = ({ post, modalHandler }) => {
           onConfirm={mutation.mutate}
           onCancel={() => setDeleteWarning(false)}
           openModalHandler={setDeleteWarning}
+          pending = {mutation.isPending}
         />
       )}
       {post?.owner?.username == localStorage.getItem("username") && (

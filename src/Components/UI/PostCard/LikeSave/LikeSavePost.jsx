@@ -8,8 +8,8 @@ import {
   BookmarkBorder,
 } from "@mui/icons-material";
 
-const LikeSavePost = ({ post }) => {
-  const { liked, likePost, isPending: pendingLike } = useLikePost(post);
+const LikeSavePost = ({post, liked, likePost, pendingLike }) => {
+  // const { liked, likePost, isPending: pendingLike } = useLikePost(post);
   const { saved, savePost, isPending: pendingSave } = useSavePost(post);
 
   return (

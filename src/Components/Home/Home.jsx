@@ -1,7 +1,6 @@
-import { useState, useRef, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import axios from "axios";
-import usePagFetch from "../../Hooks/usePagFetch";
 import FeedCard from "./FeedCard/FeedCard";
 import { CircularProgress } from "@mui/material";
 import { apiUrl } from "../../Config/config";
@@ -17,7 +16,7 @@ const Home = () => {
   const { data, hasNextPage, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["feed"],
     queryFn: async({ pageParam, ...args }) => {
-      const limit = 10;
+      const limit = 5;
       const res = await axios.get(`${apiUrl}/feeds`, {
         params: { skip: pageParam * limit, limit: limit },
         withCredentials: true,
@@ -25,7 +24,7 @@ const Home = () => {
       return res.data;
     },
     getNextPageParam: (lastPage, pages) => {
-      if (lastPage.length < 10) return null;
+      if (lastPage.length < 5) return null;
       return pages.length;
     },
     initialPageParam: 0,

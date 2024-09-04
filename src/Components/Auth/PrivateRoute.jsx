@@ -12,19 +12,6 @@ const PrivateRoute = () => {
   const location = useLocation();
 
   if (!username) return <Navigate to="/signin" />;
-  const fetchPosts = async (username) => {
-    try {
-      const res = await axios.get(
-        `${apiUrl}/${username}/posts`,
-        {
-          withCredentials: true,
-        }
-      );
-      dispatch(authActions.setPosts(res.data));
-    } catch (err) {
-      console.log(err);
-    }
-  };
   axios
     .get(
       `${apiUrl}/users/me`,
@@ -45,9 +32,6 @@ const PrivateRoute = () => {
           age: res.data.age,
         })
       );
-
-      username = localStorage.getItem("username");
-      fetchPosts(username);
       if (location.pathname == "/") navigate("/home");
       console.log("Authorized");
     })

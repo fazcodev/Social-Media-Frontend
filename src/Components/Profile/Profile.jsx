@@ -33,8 +33,8 @@ export default function Profile() {
   }, [location]);
 
   return (
-    <div className="flex flex-1 justify-evenly overflow-y-auto">
-      <div className="grow shrink basis-[85%] mmd:basis-[80%] border-r">
+    <div className="flex flex-1 items-start justify-evenly overflow-y-auto">
+      <div className="grow shrink basis-[85%] border-r mmd:basis-[80%]">
         <ProfileDesc />
         <div>
           <div ref={outerRef} className="w-full bg-stone-300 overflow-hidden">

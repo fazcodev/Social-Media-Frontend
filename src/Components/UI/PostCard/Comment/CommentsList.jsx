@@ -38,6 +38,7 @@ const CommentsList = ({ postId }) => {
       return pages.length;
     },
     initialPageParam: 0,
+    staleTime: 1000 * 60 * 15,
     refetchOnWindowFocus: false,
   });
   const lastCommentElementRef = useCallback(
@@ -121,7 +122,7 @@ const CommentsList = ({ postId }) => {
 export default CommentsList;
 
 CommentsList.propTypes = {
-  postId: PropTypes.string.isRequired,
+  postId: PropTypes.string
   // comments: PropTypes.array.isRequired,
   // setComments: PropTypes.func.isRequired,
 };

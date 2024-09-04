@@ -24,7 +24,8 @@ const SavedPosts = (props) => {
       {activePost && (
         <Modal
           title="View Post"
-          post={activePost}
+          postId={activePost._id}
+          postOwner={activePost.owner}
           openModalHandler={setActivePost}
         />
       )}

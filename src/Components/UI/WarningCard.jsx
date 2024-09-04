@@ -21,6 +21,7 @@ export default function WarningCard(props) {
               variant="contained"
               color="error"
               onClick={props.onConfirm}
+              disabled={props.pending}
             >
               {props.confirmText}
             </Button>
@@ -30,6 +31,7 @@ export default function WarningCard(props) {
               variant="contained"
               color="primary"
               onClick={props.onCancel}
+              disabled={props.pending}
             >
               Cancel
             </Button>

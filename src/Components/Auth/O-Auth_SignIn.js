@@ -1,4 +1,5 @@
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 
 export const googleSignIn = async (auth, googleProvider) => {
   try{
@@ -18,11 +19,6 @@ export const googleSignIn = async (auth, googleProvider) => {
   }
   catch(err){
     console.log(err)
-    throw new Error({
-      code: err.code,
-      message: err.message,
-      email: err.customData.email,
-      credential: GoogleAuthProvider.credentialFromError(err)
-    })
+    throw new Error(err.message)
   }
 }

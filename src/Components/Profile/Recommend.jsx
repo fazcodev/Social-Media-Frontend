@@ -88,12 +88,12 @@ export default function Recommend() {
       )}
       {suggestList?.length > 0 && (
         <div
-          className={`pt-3 w-1/4 mmd:w-1/3 mtiny:w-1/2 ${
+          className={`pt-3 px-2 w-1/4 mmd:w-1/3 mtiny:w-1/2 ${
             openList
               ? "mtiny:img-wrapper mtiny:opacity-100"
               : "mtiny:opacity-0 mtiny:invisible"
           } mtiny:rounded-md mtiny:absolute mtiny:top-16 mtiny:right-2 mtiny:bg-stone-200 transition-all mtiny:max-h-40 duration-500 text-center ${
-            seeAll ? "overflow-y-scroll max-h-56" : "overflow-hidden max-h-40"
+            seeAll ? "overflow-y-scroll max-h-56" : "overflow-hidden max-h-48"
           }`}
         >
           <span className="text-sm font-semibold text-stone-400">
@@ -112,7 +112,7 @@ export default function Recommend() {
                 return (
                   <div
                     key={person._id}
-                    className="flex cursor-pointer justify-center gap-3 mtiny:gap-2 items-center my-2"
+                    className="flex cursor-pointer gap-3 mtiny:gap-2 items-center my-2"
                     onClick={() => openUserProfile(person)}
                   >
                     <img

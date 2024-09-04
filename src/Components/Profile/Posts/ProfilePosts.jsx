@@ -25,7 +25,8 @@ const ProfilePosts = (props) => {
       {activePost && (
         <Modal
           title="View Post"
-          postId={activePost}
+          postId={activePost?._id}
+          postOwner={activePost?.owner}
           openModalHandler={setActivePost}
         />
       )}

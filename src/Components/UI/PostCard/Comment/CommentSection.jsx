@@ -9,7 +9,7 @@ import { apiUrl } from "../../../../Config/config";
 import EmojiPicker from "./EmojiPicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function CommentSection({ comment, cls, setCount, postId }) {
+export default function CommentSection({ comment, cls, postId }) {
   const dispatch = useDispatch();
   const { caption } = useSelector((state) => state.caption);
   const [myComment, setMyComment] = useState("");
@@ -77,7 +77,7 @@ export default function CommentSection({ comment, cls, setCount, postId }) {
     },
     onSettled: (data, variables, context) => {
       setMyComment("");
-      setCount((prev) => prev + 1);
+      // setCount((prev) => prev + 1);
       queryClient.setQueryData(
         ["post", postId, { type: "comments" }],
         ({ pages: [firstPage, ...restPages], pageParams }) => {
@@ -102,7 +102,7 @@ export default function CommentSection({ comment, cls, setCount, postId }) {
       initialPageParam: 0,
       getNextPageParam: (lastPage, pages) => {
         if (lastPage?.length < 10) return null;
-        return pages.length;
+        return pages?.length;
       },
     });
   };

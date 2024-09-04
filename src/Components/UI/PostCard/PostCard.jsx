@@ -14,40 +14,42 @@ import defaultAvatar from "../../Assets/Default_Avatar.png";
 import "../../Image/ImageContainer.css";
 import CommentsList from "./Comment/CommentsList";
 import DeletePost from "./Delete/DeletePost";
+import { fetchPost } from "../../../Utils/FetchUtils";
+import useLikePost from "./LikeSave/useLikePost";
 
-const PostCard = ({ postId, username, openModalHandler }) => {
+const PostCard = ({ postId, postOwner, openModalHandler }) => {
   const queryClient = useQueryClient();
-  
   const [comments, setComments] = useState([]);
+
   const { data: post } = useQuery({
-    queryKey: ["post", postId, {type: 'info'}],
-    queryFn: async () => {
-      const res = await axios.get(`${apiUrl}/posts/${postId}`, {
-        withCredentials: true,
-      });
-      return res.data;
-    },
-    initialData: () => {
-      const data = queryClient
-        .getQueryData(["profile", "posts", { type: "posted" }, username])
-        ?.pages?.find((pages) => pages.find((post) => post._id === postId));
-      return data?.at(0)
-    },
+    queryKey: ["post", postId, { type: "info" }],
+    queryFn: async () => await fetchPost(postId),
+    initialData: () =>
+      queryClient
+        .getQueryData([
+          "profile",
+          "posts",
+          { type: "posted" },
+          postOwner.username,
+        ])
+        ?.pages.flat()
+        .find((p) => p._id === postId),
+
     initialDataUpdatedAt: queryClient.getQueryState([
       "profile",
       "posts",
       { type: "posted" },
-      username,
+      postOwner.username,
     ])?.dataUpdatedAt,
     staleTime: 5000 * 60,
     refetchOnWindowFocus: false,
   });
 
-
+  const { liked, likePost, isPending: pendingLike } = useLikePost(post);
   return (
     <>
       <div className="left-1/2 top-1/2 h-3/4 mlg:h-1/2 -translate-x-1/2 -translate-y-1/2 absolute z-50 rounded-md overflow-hidden bg-white w-2/3 mlg:w-11/12 flex">
-        <LikePostAnimation post={post} />
+        <LikePostAnimation post={post} liked={liked} likePost={likePost} />
         <div className="w-1/2 text-left flex flex-col justify-between">
           <div className="w-full flex justify-between items-center p-1.5 border-b border-stone-400">
             <div className="flex gap-2 items-center">
@@ -67,7 +69,7 @@ const PostCard = ({ postId, username, openModalHandler }) => {
                 <Moment fromNow>{post?.createdAt}</Moment>
               </div>
             </div>
-            {post?.owner.username === localStorage.getItem("username") && (
+            {post?.owner?.username === localStorage.getItem("username") && (
               <DeletePost post={post} modalHandler={openModalHandler} />
             )}
           </div>
@@ -76,7 +78,12 @@ const PostCard = ({ postId, username, openModalHandler }) => {
             comments={comments}
             setComments={setComments}
           />
-          <LikeSavePost post={post} />
+          <LikeSavePost
+            post={post}
+            liked={liked}
+            likePost={likePost}
+            pendingLike={pendingLike}
+          />
           <CommentSection
             cls="w-full p-1 flex items-center border-t border-stone-400"
             comment={true}
@@ -93,5 +100,6 @@ export default PostCard;
 
 PostCard.propTypes = {
   postId: PropTypes.string.isRequired,
+  postOwner: PropTypes.object.isRequired,
   openModalHandler: PropTypes.func.isRequired,
 };

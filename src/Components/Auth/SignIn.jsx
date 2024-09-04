@@ -57,9 +57,9 @@ const SignIn = () => {
     setLoading(false);
   };
   const handleGoogleSignIn = async (e) => {
+    setError("");
+    setLoading(true);
     try {
-      setLoading(true);
-      setError("");
       const data = await googleSignIn(auth, googleProvider);
       const res = await axios.post(
         `${apiUrl}/users/oauth-login`,
@@ -96,8 +96,8 @@ const SignIn = () => {
       );
     } catch (er) {
       console.error(er);
-      if(er?.response)setError(er.response.data.error);
-      else if(typeof(er.message) === string) setError(er.message)
+      if(er.response)setError(er.response.data.error);
+      setError(er.message)
     }
     setLoading(false);
   };
@@ -118,8 +118,9 @@ const SignIn = () => {
           </span>
           <div className="inline-block w-1/6 h-0.5 border-b border-black" />
           <button
+            disabled={loading}
             onClick={handleGoogleSignIn}
-            className={`block bg-neutral-200 hover:bg-neutral-300 border-neutral-400 transition-all border-2 w-3/4 mtiny:w-full mx-auto my-4 py-2 px-2 rounded`}
+            className={`block bg-neutral-200 ${loading ? 'opacity-65' : 'hover:bg-neutral-300'} border-neutral-400 transition-all border-2 w-3/4 mtiny:w-full mx-auto my-4 py-2 px-2 rounded`}
           >
             <img
               className="w-6 inline-block"

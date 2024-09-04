@@ -29,32 +29,31 @@ const useSavePost = (post) => {
           queryKey: [
             "profile",
             "posts",
-            { type: "saved" },
-            localStorage.getItem("username"),
+            { type: "saved" }
           ],
-          exact: true,
-          refetchType: "all",
+          refetchType: 'all'
         },
         { throwonError: true }
       );
-      queryClient.setQueryData(
-        [
-          "profile",
-          "posts",
-          { type: "posted" },
-          localStorage.getItem("username"),
-        ],
-        (prevPages) =>
-          prevPages.map((page) =>
-            page.map((p) => {
-              if (p._id === post._id) {
-                return { isSaved: saved, ...p };
-              }
-              return p;
-            })
-          )
+      queryClient.invalidateQueries(
+        {
+          queryKey: [
+            "profile",
+            "posts",
+            { type: "posted" }
+          ],
+          refetchType: 'inactive'
+        },
+        { throwonError: true }
       );
-
+      queryClient.invalidateQueries(
+        {
+          queryKey: ['post', post._id, { type: 'info' }],
+          exact: true,
+          refetchType: 'none'
+        },
+        { throwonError: true }
+      )
       queryClient.setQueryData(
         ['feed'],
         (prevPages) =>

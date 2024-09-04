@@ -29,7 +29,7 @@ const ContainerMenu = ({ menu, title, editModeRef }) => {
                     onClick={
                       value == "Edit"
                         ? editButton
-                        : value == "Next" || value == "Upload Avatar"
+                        : (value == "Next" || value == "Upload Avatar")
                         ? ()=>uploadButton(editModeRef)
                         : shareButton
                     }
