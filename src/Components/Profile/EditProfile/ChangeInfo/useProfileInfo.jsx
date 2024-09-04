@@ -2,7 +2,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { apiUrl } from "../../../../config";
+import { apiUrl } from "../../../../Config/config";
 
 const useProfileInfo = () => {
   const queryClient = useQueryClient();

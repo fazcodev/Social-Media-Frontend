@@ -10,7 +10,7 @@ import { captionActions } from "../../../Store/ImageEditor";
 import { authActions } from "../../../Store/Auth";
 
 import { createImageBlob, getCroppedImg, applyFilter } from "../ImageUtils";
-import { apiUrl } from "../../../config";
+import { apiUrl } from "../../../Config/config";
 
 const useButtons = (menu, title) => {
   const { caption } = useSelector((state) => state.caption);

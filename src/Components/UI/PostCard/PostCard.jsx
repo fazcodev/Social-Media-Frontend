@@ -8,7 +8,7 @@ import CommentSection from "./Comment/CommentSection";
 import LikeSavePost from "./LikeSave/LikeSavePost";
 import LikePostAnimation from "./LikeSave/LikePostAnimation";
 
-import { apiUrl } from "../../../config";
+import { apiUrl } from "../../../Config/config";
 
 import defaultAvatar from "../../Assets/Default_Avatar.png";
 import "../../Image/ImageContainer.css";

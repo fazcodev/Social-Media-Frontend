@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import AvatarPNG from "../Assets/Default_Avatar.png";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 
 const UserCard = ({ user, followings, loading }) => {
   const [isFollowing, setIsFollowing] = useState(

@@ -4,7 +4,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import AvatarPNG from "../Assets/Default_Avatar.png";
 import { GroupAdd } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 
 export default function Recommend() {
   const [openList, setOpenList] = useState(false);

@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { apiUrl } from "../../Config/config";
 const likePost = async (setLiked, setLikesCount, postId, reqType) => {
     try {
       await axios({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { apiUrl } from "../../../../config.js";
+import { apiUrl } from "../../../../Config/config.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 const useLikePost = (post) => {
   const [liked, setLiked] = useState(null);

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Modal from "../UI/Modal";
 import PostsGrid from "../Profile/Posts/PostsGrid";
 import axios from "axios";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 import { useInfiniteQuery } from "@tanstack/react-query";
 export default function Explore() {
   const [activePost, setActivePost] = useState(null); // [0, 1, 2, 3, 4

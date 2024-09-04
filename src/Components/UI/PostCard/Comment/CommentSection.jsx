@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { v4 as uuid } from "uuid";
 import { fetchComments } from "../../../../Utils/FetchUtils";
 import { captionActions } from "../../../../Store/ImageEditor";
-import { apiUrl } from "../../../../config";
+import { apiUrl } from "../../../../Config/config";
 import EmojiPicker from "./EmojiPicker";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

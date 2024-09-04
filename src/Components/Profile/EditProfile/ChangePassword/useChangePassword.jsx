@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import axios from "axios";
-import { apiUrl } from "../../../../config";
+import { apiUrl } from "../../../../Config/config";
 
 const useChangePassword = () => {
   const [alertMsg, setAlertMsg] = useState(null);

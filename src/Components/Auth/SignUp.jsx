@@ -4,7 +4,7 @@ import axios from "axios";
 import { Alert } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 import AuthBg from '../Assets/AuthBg.jpg'
 
 const SignUp = () => {
@@ -66,9 +66,9 @@ const SignUp = () => {
   };
   return (
     <div className="flex justify-center items-center h-screen bg-cover bg-no-repeat bg-center" style={{backgroundImage: `url(${AuthBg})`}}>
-      <div className="text-center border-neutral-500 border-2 rounded-xl bg-gray-100 bg-opacity-90 shadow-[0px_3px_6px_6px_rgba(0,_0,_0,_0.16)] px-4 py-8 w-1/3 mtiny:w-4/5 my-5">
+      <div className="text-center border-neutral-500 border-2 rounded-xl bg-gray-100 bg-opacity-90 shadow-[0px_3px_6px_6px_rgba(0,_0,_0,_0.16)] px-4 py-8 w-1/3 mlg:w-1/2 mtiny:w-11/12 my-5">
         <h1 className="text-4xl font-semibold">SignUp</h1>
-        <form className="text-left text-xl my-5" onSubmit={handleSubmit}>
+        <form className="text-left text-xl my-3" onSubmit={handleSubmit}>
           {error && <Alert severity="error">{error}</Alert>}
           <label htmlFor="username">
             <b>Email</b>

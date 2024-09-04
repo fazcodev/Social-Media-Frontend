@@ -1,9 +1,11 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {signOut} from "firebase/auth"
+import {auth} from '../../Config/firebase-config'
 import axios from "axios";
 import PropTypes from "prop-types";
 
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 
 import { PhoneAndroid, DevicesOther } from "@mui/icons-material";
 
@@ -24,6 +26,7 @@ const LogoutMenu = ({logoutMenu}) => {
               withCredentials: true,
             }
           );
+          await signOut(auth)
           // localStorage.removeItem("token");
           localStorage.removeItem("username");
           localStorage.removeItem("id")

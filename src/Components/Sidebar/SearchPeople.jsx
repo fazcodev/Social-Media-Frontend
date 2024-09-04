@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import axios from "axios";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 import usePagFetch from "../../Hooks/usePagFetch";
 import { fetchFollowings } from "../../Utils/FetchUtils";
 import { Search } from "@mui/icons-material";

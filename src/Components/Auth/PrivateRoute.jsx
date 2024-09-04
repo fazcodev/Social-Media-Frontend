@@ -2,7 +2,7 @@ import { Outlet, Navigate, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../Store/Auth";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 
 const PrivateRoute = () => {
   let username = localStorage.getItem("username");

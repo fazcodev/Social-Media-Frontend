@@ -4,7 +4,7 @@ import axios from "axios";
 import usePagFetch from "../../Hooks/usePagFetch";
 import FeedCard from "./FeedCard/FeedCard";
 import { CircularProgress } from "@mui/material";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 
 const Home = () => {
   // const [pageNumber, setPageNumber] = useState(0);

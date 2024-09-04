@@ -12,7 +12,7 @@ import axios from "axios";
 import Modal from "../UI/Modal";
 import { CameraAlt } from "@mui/icons-material";
 import AvatarPNG from "../Assets/Default_Avatar.png";
-import { apiUrl } from "../../config";
+import { apiUrl } from "../../Config/config";
 import {
   fetchFollowers,
   fetchFollowings,
@@ -130,10 +130,10 @@ const ProfileDesc = () => {
         <Modal title="Edit Avatar" openModalHandler={setEditAvatarModal} />
       )}
       <div className="p-3 msm:px-2">
-        <div className="flex justify-center items-start gap-10 mlg:gap-8 mmd:gap-5">
+        <div className="flex justify-center items-center gap-10 mlg:gap-8 mmd:gap-5">
           <div
             onClick={username === currUser ? () => setEditAvatarModal(true) : null}
-            className={`relative aspect-square inline-block rounded-full shrink max-w-[25%] items-center img-overlay ${
+            className={`relative aspect-square inline-block rounded-full shrink w-[25%] items-center img-overlay ${
               username === currUser
                 ? "cursor-pointer"
                 : ""
@@ -152,7 +152,7 @@ const ProfileDesc = () => {
               className="rounded-full w-full object-cover"
               alt="User Avatar"
               src={
-                userInfo[2].data?.avatarURL
+                (userInfo[2].data?.avatarURL)
                   ? userInfo[2].data.avatarURL
                   : AvatarPNG
               }

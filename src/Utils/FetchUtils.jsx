@@ -1,5 +1,5 @@
 import axios from "axios";
-import { apiUrl } from "../config";
+import { apiUrl } from "../Config/config";
 
 export const fetchPosts = async (username, type, {pageParam, ...args}) => {
   try {
