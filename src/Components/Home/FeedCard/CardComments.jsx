@@ -10,8 +10,8 @@ const CardComments = ({ post }) => {
     <>
       {openPostModal && (
         <Modal
-          username = {post.owner.username}
-          postId={post._id}
+          postOwner = {post?.owner}
+          postId={post?._id}
           title="View Post"
           openModalHandler={setOpenPostModal}
         />
