@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { ContainerContext } from "../Context/container-context";
 
 import useButtons from "./MenuButtons";
+import { useSelector } from "react-redux";
 
 const ContainerMenu = ({ menu, title, editModeRef }) => {
 
   const { menuIdx } = useContext(ContainerContext);
+  const editedImage = useSelector((state) => state.editMode.editedImage);
   const { editButton, uploadButton, shareButton, backButton } = useButtons(menu, title);
 
   return (
@@ -31,7 +33,7 @@ const ContainerMenu = ({ menu, title, editModeRef }) => {
                         ? editButton
                         : (value == "Next" || value == "Upload Avatar")
                         ? ()=>uploadButton(editModeRef)
-                        : shareButton
+                        : ()=>shareButton(editedImage)
                     }
                   >
                     {value}

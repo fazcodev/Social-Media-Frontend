@@ -3,12 +3,10 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { ContainerContext } from "../Context/container-context";
 import { useQueryClient } from "@tanstack/react-query";
-
 import { cropModeActions } from "../../../Store/ImageEditor";
 import { editModeActions } from "../../../Store/ImageEditor";
 import { captionActions } from "../../../Store/ImageEditor";
 import { authActions } from "../../../Store/Auth";
-
 import { createImageBlob, getCroppedImg, applyFilter } from "../ImageUtils";
 import { apiUrl } from "../../../Config/config";
 
@@ -17,7 +15,6 @@ const useButtons = (menu, title) => {
   const cropMode = useSelector((state) => state.cropMode);
   const containerCtx = useContext(ContainerContext);
   const queryClient = useQueryClient();
-
 
   const dispatch = useDispatch();
 
@@ -46,7 +43,7 @@ const useButtons = (menu, title) => {
     containerCtx.setMenuIdx((menuIdx) => menuIdx + 1);
   };
 
-  const shareButton = async (editedImgURL) => {
+  const shareButton = async (editedImgURL = editedImage) => {
     containerCtx.setUploadingPost(1);
     const formData = new FormData();
     const newImageBlob = await createImageBlob(editedImgURL);

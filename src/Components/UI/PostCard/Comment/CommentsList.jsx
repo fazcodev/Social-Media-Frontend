@@ -62,7 +62,7 @@ const CommentsList = ({ postId }) => {
   // }, []);
 
   return (
-    <div className="h-5/6 flex flex-col-reverse overflow-y-scroll">
+    <div className="h-full grow flex flex-col-reverse overflow-y-scroll">
       <div ref={bottomRef} />
       {data?.pages?.length > 0 &&
         data.pages.map((page, idx) =>

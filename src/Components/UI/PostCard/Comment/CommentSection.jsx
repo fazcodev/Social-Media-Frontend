@@ -58,7 +58,6 @@ export default function CommentSection({ comment, cls, postId }) {
       await queryClient.setQueryData(
         ["post", postId, { type: "comments" }],
         ({ pages: [firstPage, ...restPages], pageParams }) => {
-          console.log(firstPage);
           return {
             pages: [[optimisticComment, ...firstPage], ...restPages],
             pageParams,
@@ -109,12 +108,11 @@ export default function CommentSection({ comment, cls, postId }) {
   return (
     <div className={`${cls ? cls : ""}`}>
       <textarea
-        // style={{ height: "80%" }}
-        onFocus={prefetchComments}
-        rows={comment == undefined ? 5 : 2}
+        onFocus={comment ? prefetchComments : null}
+        rows={comment == undefined ? 5: 2}
         value={comment != undefined ? myComment : caption}
         onChange={onTextChange}
-        className="img-wrapper w-full outline-none resize-none"
+        className="img-wrapper mtiny:h-8 w-full outline-none resize-none"
         placeholder={`${
           comment == undefined ? "Add a caption" : "Add a comment"
         }`}

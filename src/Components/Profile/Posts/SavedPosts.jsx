@@ -18,7 +18,6 @@ const SavedPosts = (props) => {
     refetchOnWindowFocus: false,
     staleTime: 10000*60
   })
-  console.log(hasNextPage)
   return (
     <>
       {activePost && (

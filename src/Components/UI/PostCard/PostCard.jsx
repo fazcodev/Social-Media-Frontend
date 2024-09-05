@@ -24,17 +24,27 @@ const PostCard = ({ postId, postOwner, openModalHandler }) => {
   const { data: post } = useQuery({
     queryKey: ["post", postId, { type: "info" }],
     queryFn: async () => await fetchPost(postId),
-    initialData: () =>
-      queryClient
-        .getQueryData([
-          "profile",
-          "posts",
-          { type: "posted" },
-          postOwner.username,
-        ])
-        ?.pages.flat()
-        .find((p) => p._id === postId),
-
+    initialData: () =>{
+      let data = queryClient
+      .getQueryData([
+        "profile",
+        "posts",
+        { type: "posted" },
+        postOwner.username,
+      ])
+      ?.pages.flat()
+      .find((p) => p._id === postId)
+      if(data) return data
+      return queryClient
+      .getQueryData([
+        "profile",
+        "posts",
+        { type: "saved" },
+        localStorage.getItem("username"),
+      ])
+      ?.pages.flat()
+      .find((p) => p._id === postId)
+    },
     initialDataUpdatedAt: queryClient.getQueryState([
       "profile",
       "posts",
@@ -48,9 +58,9 @@ const PostCard = ({ postId, postOwner, openModalHandler }) => {
   const { liked, likePost, isPending: pendingLike } = useLikePost(post);
   return (
     <>
-      <div className="left-1/2 top-1/2 h-3/4 mlg:h-1/2 -translate-x-1/2 -translate-y-1/2 absolute z-50 rounded-md overflow-hidden bg-white w-2/3 mlg:w-11/12 flex">
+      <div className="left-1/2 top-1/2 h-3/4 mlg:h-3/5 -translate-x-1/2 -translate-y-1/2 absolute z-50 rounded-md overflow-hidden bg-white w-2/3 mlg:w-11/12 flex mtiny:flex-col">
         <LikePostAnimation post={post} liked={liked} likePost={likePost} />
-        <div className="w-1/2 text-left flex flex-col justify-between">
+        <div className="w-1/2 mtiny:w-full mtiny:h-1/2 grow text-left flex flex-col justify-between">
           <div className="w-full flex justify-between items-center p-1.5 border-b border-stone-400">
             <div className="flex gap-2 items-center">
               <img
@@ -85,7 +95,7 @@ const PostCard = ({ postId, postOwner, openModalHandler }) => {
             pendingLike={pendingLike}
           />
           <CommentSection
-            cls="w-full p-1 flex items-center border-t border-stone-400"
+            cls="w-full mtiny:shrink p-1 flex items-center border-t border-stone-400"
             comment={true}
             postId={postId}
             // addCommentHandler={setComments}
