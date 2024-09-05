@@ -36,7 +36,8 @@ export default function Explore() {
       {activePost && (
         <Modal
           title="View Post"
-          postId={activePost}
+          postOwner={activePost.owner}
+          postId={activePost._id}
           openModalHandler={setActivePost}
         />
       )}

@@ -25,7 +25,7 @@ const ProfileDesc = () => {
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
-  const username = useParams()?.username ? useParams().username : localStorage.getItem("username");
+  const username = (useParams()?.username) ? useParams().username : localStorage.getItem("username");
   const currUser = localStorage.getItem('username')
   // const statePosts = useSelector((state) => state.auth.posts);
   // const stateBio = useSelector((state) => state.auth.bio);
@@ -40,7 +40,7 @@ const ProfileDesc = () => {
     mutationFn: async (action) => {
       await axios({
         method: action === "follow" ? "post" : "delete",
-        url: `${apiUrl}/users/${currUser}/${action}`,
+        url: `${apiUrl}/users/${username}/${action}`,
         withCredentials: true,
       });
     },

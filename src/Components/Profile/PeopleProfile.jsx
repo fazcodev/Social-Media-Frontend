@@ -3,7 +3,6 @@ import ProfilePosts from "./Posts/ProfilePosts";
 import ProfileDesc from "./ProfileDesc";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { apiUrl } from "../../Config/config";
 
 export default function Profile() {
 
