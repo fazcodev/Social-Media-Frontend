@@ -1,15 +1,6 @@
-# React + Vite
+# SnapMedia Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the frontend application for SnapMedia, a social media platform. It is built using modern web technologies to provide a dynamic and responsive user interface for interacting with feeds, exploring posts, and managing user profiles.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-
-## Demo Account
-
-Username : fazeel8899
-
-Password : fazeel8899
+## Live Application
+You can access the live application here: [https://snapmedia.vercel.app](https://snapmedia.vercel.app)
