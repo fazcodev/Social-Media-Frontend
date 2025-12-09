@@ -45,6 +45,7 @@ export default function Recommend() {
         }/${e.target.innerText.toLowerCase()}`,
         withCredentials: true,
       });
+      e.target.innerText = (e.target.innerText == "Follow"? "Unfollow" : "Follow");
       return res.data;
     } catch (err) {
       console.log(err);

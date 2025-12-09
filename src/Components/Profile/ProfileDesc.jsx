@@ -27,14 +27,6 @@ const ProfileDesc = () => {
   const navigate = useNavigate();
   const username = (useParams()?.username) ? useParams().username : localStorage.getItem("username");
   const currUser = localStorage.getItem('username')
-  // const statePosts = useSelector((state) => state.auth.posts);
-  // const stateBio = useSelector((state) => state.auth.bio);
-
-  // const avatarURL = user ? user.avatarURL : localStorage.getItem("avatarURL");
-  // const username = localStorage.getItem("username");
-  // const name = user?.username || localStorage.getItem("name");
-  // const bio = user?.bio || stateBio;
-  // const userPosts = posts || statePosts;
 
   const mutation = useMutation({
     mutationFn: async (action) => {
@@ -47,33 +39,11 @@ const ProfileDesc = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         predicate: (query)=>{
-          return query.queryKey[0] === "profile" && query.queryKey[1] === desc && (query.queryKey.at(-1) === currUser || query.queryKey.at(-1) == username)
+          return query.queryKey[0] === "profile" && query.queryKey[1] === "desc" && (query.queryKey.at(-1) === currUser || query.queryKey.at(-1) === username)
         }
       });
     },
   });
-  // useEffect(() => {
-  //   const fetchFollowers = async () => {
-  //     try {
-  //       const res = await axios.get(`${apiUrl}/users/${username}/followers`);
-  //       setFollowers(res.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   const fetchFollowings = async () => {
-  //     try {
-  //       const res = await axios.get(`${apiUrl}/users/${username}/followings`);
-  //       setFollowings(res.data);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-
-  //   fetchFollowers();
-  //   fetchFollowings();
-  // }, [username]);
 
   const userInfo = useQueries({
     queries: [
@@ -106,22 +76,6 @@ const ProfileDesc = () => {
       : "follow";
 
     mutation.mutate(action);
-
-    // try {
-    //   await axios({
-    //     method: action === "follow" ? "post" : "delete",
-    //     url: `${apiUrl}/users/${username}/${action}`,
-    //     withCredentials: true,
-    //   });
-    //   setFollowers((prev) =>
-    //     action === "follow"
-    //       ? [...prev, { follower: localStorage.getItem("id") }]
-    //       : prev.filter((u) => u.follower !== localStorage.getItem("id"))
-    //   );
-    // } catch (err) {
-    //   console.error(err);
-    // }
-    // setLoading(false);
   };
 
   return (
