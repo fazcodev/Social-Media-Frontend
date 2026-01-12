@@ -14,9 +14,10 @@ const UserCard = ({ user, followings, loading }) => {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (req) => {
+      const encodedUsername = encodeURIComponent(user.username);
       await axios({
         method: req == "follow" ? "post" : "delete",
-        url: `${apiUrl}/users/${user.username}/${req}`,
+        url: `${apiUrl}/users/${encodedUsername}/${req}`,
         withCredentials: true,
       });
     },
@@ -37,6 +38,7 @@ const UserCard = ({ user, followings, loading }) => {
         },
         { throwOnError: true }
       );
+      queryClient.invalidateQueries({ queryKey: ["profile", "suggestions"] });
       setIsFollowing((prev) => !prev);
     },
   });

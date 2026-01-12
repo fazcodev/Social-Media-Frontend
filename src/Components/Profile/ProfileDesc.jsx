@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   useMutation,
   useQueries,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { PersonOffOutlined } from "@mui/icons-material";
 import axios from "axios";
 import Modal from "../UI/Modal";
 import { CameraAlt } from "@mui/icons-material";
@@ -28,9 +28,10 @@ const ProfileDesc = () => {
 
   const mutation = useMutation({
     mutationFn: async (action) => {
+      const encodedUsername = encodeURIComponent(username);
       await axios({
         method: action === "follow" ? "post" : "delete",
-        url: `${apiUrl}/users/${username}/${action}`,
+        url: `${apiUrl}/users/${encodedUsername}/${action}`,
         withCredentials: true,
       });
     },
@@ -40,6 +41,7 @@ const ProfileDesc = () => {
           return query.queryKey[0] === "profile" && query.queryKey[1] === "desc" && (query.queryKey.at(-1) === currUser || query.queryKey.at(-1) === username)
         }
       });
+      queryClient.invalidateQueries({ queryKey: ["profile", "suggestions"] });
     },
   });
 
@@ -50,21 +52,28 @@ const ProfileDesc = () => {
         queryFn: () => fetchFollowers(username),
         staleTime: 5000 * 60,
         refetchOnWindowFocus: false,
+        retry: false,
       },
       {
         queryKey: ["profile", 'desc', { type: 'followings' }, username],
         queryFn: () => fetchFollowings(username),
         staleTime: 5000 * 60,
         refetchOnWindowFocus: false,
+        retry: false,
       },
       {
         queryKey: ["profile", 'desc', { type: 'info' }, username],
         queryFn: () => fetchUserInfo(username),
         staleTime: 5000 * 60,
         refetchOnWindowFocus: false,
+        retry: false,
       },
     ],
   });
+
+  // Check if user doesn't exist (API returned 404)
+  const userNotFound = userInfo[2].isError;
+  const isLoading = userInfo[2].isLoading;
 
   const toggleFollowUser = async () => {
     const action = userInfo[0].data.some(
@@ -75,6 +84,47 @@ const ProfileDesc = () => {
 
     mutation.mutate(action);
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <div className="flex justify-center items-center gap-10 max-w-4xl mx-auto animate-pulse">
+          <div className="w-[25%] aspect-square rounded-full bg-slate-200 dark:bg-slate-700" />
+          <div className="flex-col flex gap-4 flex-1">
+            <div className="h-8 w-40 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+            <div className="flex gap-6">
+              <div className="h-5 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+              <div className="h-5 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+              <div className="h-5 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+            </div>
+            <div className="h-4 w-32 bg-slate-200 dark:bg-slate-700 rounded" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (userNotFound) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-6">
+        <div className="bg-white/30 dark:bg-slate-800/40 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-lg rounded-2xl p-10 text-center max-w-md">
+          <PersonOffOutlined sx={{ fontSize: 64 }} className="text-slate-400 dark:text-slate-500 mb-4" />
+          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+            User Not Found
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mb-6">
+            The user <span className="font-semibold text-slate-700 dark:text-slate-300">@{username}</span> doesn't exist or may have been removed.
+          </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-accent hover:bg-accent-dark text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-accent/20 hover:shadow-accent/40 transition-all active:scale-95"
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

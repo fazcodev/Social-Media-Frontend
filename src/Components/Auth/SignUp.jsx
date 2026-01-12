@@ -103,6 +103,9 @@ const SignUp = () => {
                   name="username"
                   type="text"
                   required
+                  onChange={(e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-Z0-9_.@-]/g, '');
+                  }}
                   className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:border-accent focus:ring-1 focus:ring-accent/50 outline-none transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400 text-sm"
                   placeholder="Username"
                 />

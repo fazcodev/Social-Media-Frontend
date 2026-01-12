@@ -36,19 +36,14 @@ export default function Recommend() {
   });
 
   const followUser = async (e, person) => {
-    // console.log(e.currentTarget.innerText.toLowerCase());
-    try {
-      const res = await axios({
-        method: e.target.innerText == "Follow" ? "post" : "delete",
-        url: `${apiUrl}/users/${person.username
-          }/${e.target.innerText.toLowerCase()}`,
-        withCredentials: true,
-      });
-      e.target.innerText = (e.target.innerText == "Follow" ? "Unfollow" : "Follow");
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
+    const encodedUsername = encodeURIComponent(person.username);
+    const res = await axios({
+      method: e.target.innerText == "Follow" ? "post" : "delete",
+      url: `${apiUrl}/users/${encodedUsername}/${e.target.innerText.toLowerCase()}`,
+      withCredentials: true,
+    });
+    e.target.innerText = (e.target.innerText == "Follow" ? "Unfollow" : "Follow");
+    return res.data;
   };
   const { mutate, isFetching } = useMutation({
     mutationFn: ({ e, person }) => {

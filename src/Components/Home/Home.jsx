@@ -21,6 +21,7 @@ const Home = () => {
       return pages.length;
     },
     initialPageParam: 0,
+    refetchInterval: 10000, // Poll the server every 30 seconds for live updates
   });
 
   const observer = useRef();

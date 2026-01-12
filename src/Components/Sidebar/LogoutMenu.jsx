@@ -5,6 +5,8 @@ import { auth } from '../../Config/firebase-config'
 import axios from "axios";
 import PropTypes from "prop-types";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 import { apiUrl } from "../../Config/config";
 
 import { PhoneAndroid, DevicesOther } from "@mui/icons-material";
@@ -14,6 +16,7 @@ const LogoutMenu = ({ logoutMenu }) => {
 
   const [loggingOut, setLoggingOut] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
 
   const logoutHandler = async (type) => {
@@ -28,6 +31,7 @@ const LogoutMenu = ({ logoutMenu }) => {
       );
       await signOut(auth)
       // localStorage.removeItem("token");
+      queryClient.clear();
       localStorage.removeItem("username");
       localStorage.removeItem("id")
       localStorage.removeItem("name");

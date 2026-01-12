@@ -4,7 +4,8 @@ import { apiUrl } from "../Config/config";
 export const fetchPosts = async (username, type, { pageParam = 0, ...args } = {}) => {
   try {
     const limit = 3;
-    const url = type === 'saved' ? `${apiUrl}/posts/${username}/saved` : `${apiUrl}/${username}/posts`;
+    const encodedUsername = encodeURIComponent(username);
+    const url = type === 'saved' ? `${apiUrl}/posts/${encodedUsername}/saved` : `${apiUrl}/${encodedUsername}/posts`;
     const res = await axios.get(url, { withCredentials: type === "saved", params: { skip: pageParam * limit, limit } });
     return res.data;
   } catch (err) {
@@ -13,32 +14,23 @@ export const fetchPosts = async (username, type, { pageParam = 0, ...args } = {}
 };
 
 export const fetchUserInfo = async (username) => {
-  try {
-    const res = await axios.get(`${apiUrl}/users/${username}`, {
-      withCredentials: true,
-    });
-    return res.data;
-  } catch (err) {
-    console.log(err);
-  }
+  const encodedUsername = encodeURIComponent(username);
+  const res = await axios.get(`${apiUrl}/users/${encodedUsername}`, {
+    withCredentials: true,
+  });
+  return res.data;
 };
 
 export const fetchFollowings = async (username) => {
-  try {
-    const res = await axios.get(`${apiUrl}/users/${username}/followings`);
-    return res.data;
-  } catch (err) {
-    console.log(err);
-  }
+  const encodedUsername = encodeURIComponent(username);
+  const res = await axios.get(`${apiUrl}/users/${encodedUsername}/followings`);
+  return res.data;
 };
 
 export const fetchFollowers = async (username) => {
-  try {
-    const res = await axios.get(`${apiUrl}/users/${username}/followers`);
-    return res.data;
-  } catch (err) {
-    console.log(err);
-  }
+  const encodedUsername = encodeURIComponent(username);
+  const res = await axios.get(`${apiUrl}/users/${encodedUsername}/followers`);
+  return res.data;
 };
 
 export const fetchPost = async (postId) => {

@@ -114,7 +114,7 @@ export const createImageBlob = async (imgURL) => {
         resolve(file);
       },
       "image/jpeg",
-      100
+      0.7
     );
   });
 };
@@ -145,7 +145,7 @@ export const applyFilter = async (imgSrc, filterStyle, opacity = 1) => {
         resolve(URL.createObjectURL(file));
       },
       "image/jpeg",
-      100
+      0.7
     );
   });
 };

@@ -19,21 +19,36 @@ const useProfileInfo = () => {
   const [usernameAvl, setUsernameAvl] = useState(true);
 
   useEffect(() => {
+    const currentUsername = localStorage.getItem("username");
+
+    // Skip check if username is empty or is the user's own current username
+    if (
+      !userData.username ||
+      userData.username.trim() === "" ||
+      userData.username.toLowerCase() === currentUsername?.toLowerCase()
+    ) {
+      setUsernameAvl(true);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(false);
     let cancel;
 
+    const encodedUsername = encodeURIComponent(userData.username);
     axios({
       method: "head",
-      url: `${apiUrl}/users/${userData.username}`,
+      url: `${apiUrl}/users/${encodedUsername}`,
       cancelToken: new axios.CancelToken((c) => (cancel = c)),
     })
       .then(() => {
         setUsernameAvl(false);
       })
-      .catch(() => {
-        setUsernameAvl(true);
-        console.clear();
+      .catch((err) => {
+        if (!axios.isCancel(err)) {
+          setUsernameAvl(true);
+        }
       })
       .finally(() => {
         setLoading(false);
@@ -43,7 +58,10 @@ const useProfileInfo = () => {
 
   const handleInputChange = (e) => {
     if (alertMsg) setAlertMsg(null);
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+    if (name === "username") {
+      value = value.replace(/[^a-zA-Z0-9_.@-]/g, '');
+    }
     if (name === "bio" && value.length > 150) return;
     setUserData((prevData) => ({
       ...prevData,
@@ -56,6 +74,7 @@ const useProfileInfo = () => {
     setError(false);
     setAlertMsg(null);
     setLoading(true);
+
     if (userData.username.length > 0 && !usernameAvl) {
       setError(true);
       setAlertMsg("Username not available");
@@ -63,55 +82,68 @@ const useProfileInfo = () => {
       return;
     }
 
-    dispatch(
-      authActions.setAuthData({
-        token: localStorage.getItem("token"),
-        ...(userData.name
-          ? { name: userData.name }
-          : { name: localStorage.getItem("name") }),
-        ...(userData.email
-          ? { email: userData.email }
-          : { email: localStorage.getItem("email") }),
-        ...(userData.username
-          ? { username: userData.username }
-          : { username: localStorage.getItem("username") }),
-        ...(userData.avatarURL
-          ? { avatarURL: userData.avatarURL }
-          : { avatarURL: localStorage.getItem("avatarURL") }),
-        ...(userData.age ? { age: userData.age } : { age: null }),
-        ...(userData.bio ? { bio: userData.bio } : { bio: null }),
-      })
-    );
+    // Build the payload — only include non-empty fields
+    const payload = {};
+    if (userData.username) payload.username = userData.username;
+    if (userData.name) payload.name = userData.name;
+    if (userData.age) payload.age = userData.age;
+    if (userData.bio) payload.bio = userData.bio;
+    if (userData.email) payload.email = userData.email;
 
-    queryClient.setQueryData(['profile', 'desc', {type: 'info'}, localStorage.getItem('username')], (oldData)=>{
-      return{
-        ...oldData,
-        name: userData.name || oldData.name,
-        email: userData.email || oldData.email,
-        username: userData.username || oldData.username,
-        age: userData.age || oldData.age,
-        bio: userData.bio || oldData.bio,
-      }
-    })
-    if (userData.username) localStorage.setItem("username", userData.username);
-    if (userData.name) localStorage.setItem("name", userData.name);
-    if (userData.email) localStorage.setItem("email", userData.email);
-    if (userData.age) localStorage.setItem("age", userData.age);
-    if (userData.bio) localStorage.setItem("bio", userData.bio);
+    // Don't send an empty update
+    if (Object.keys(payload).length === 0) {
+      setError(true);
+      setAlertMsg("No changes to save");
+      setLoading(false);
+      return;
+    }
+
     try {
-      await axios.patch(
+      const response = await axios.patch(
         `${apiUrl}/users/me`,
-        {
-          ...(userData.username && { username: userData.username }),
-          ...(userData.name && { name: userData.name }),
-          ...(userData.age && { age: userData.age }),
-          ...(userData.bio && { bio: userData.bio }),
-          ...(userData.email && { email: userData.email }),
-        },
-        {
-          withCredentials: true,
-        }
+        payload,
+        { withCredentials: true }
       );
+
+      // Only update frontend state AFTER the API confirms success
+      const updatedUser = response.data;
+      const oldUsername = localStorage.getItem("username");
+
+      // Update localStorage with server-confirmed values
+      if (updatedUser.username) localStorage.setItem("username", updatedUser.username);
+      if (updatedUser.name) localStorage.setItem("name", updatedUser.name);
+      if (updatedUser.email) localStorage.setItem("email", updatedUser.email);
+      if (updatedUser.age !== undefined) localStorage.setItem("age", updatedUser.age);
+      if (updatedUser.bio !== undefined) localStorage.setItem("bio", updatedUser.bio || "");
+
+      // Update Redux store with server-confirmed values
+      dispatch(
+        authActions.setAuthData({
+          name: updatedUser.name,
+          email: updatedUser.email,
+          username: updatedUser.username,
+          avatarURL: updatedUser.avatarURL || localStorage.getItem("avatarURL"),
+          id: updatedUser._id || localStorage.getItem("id"),
+          bio: updatedUser.bio || null,
+          age: updatedUser.age || null,
+        })
+      );
+
+      // Invalidate profile query cache so it re-fetches fresh data
+      // Remove old username cache if username changed
+      if (payload.username && payload.username !== oldUsername) {
+        queryClient.removeQueries({
+          queryKey: ["profile", "desc"],
+          predicate: (query) => query.queryKey.at(-1) === oldUsername,
+        });
+      }
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          query.queryKey[0] === "profile" &&
+          query.queryKey[1] === "desc" &&
+          (query.queryKey.at(-1) === updatedUser.username || query.queryKey.at(-1) === oldUsername),
+      });
+
       setError(false);
       setAlertMsg("Profile updated successfully");
       setUserData({
