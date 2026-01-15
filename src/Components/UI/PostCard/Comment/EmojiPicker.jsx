@@ -21,19 +21,18 @@ const EmojiPicker = ({ comment, setMyComment }) => {
     }
     setMyComment((prev) => prev + emoji);
   };
-  
+
   return (
     <div>
       <button
-        className="bg-transparent"
-        onClick={() => setShowEmojis((prev)=>!prev)}
+        className="transition-all duration-200 hover:scale-110 active:scale-95 text-slate-400 hover:text-amber-400"
+        onClick={() => setShowEmojis((prev) => !prev)}
       >
         <svg
           className="h-7 w-7"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          opacity="30%"
           stroke="currentColor"
         >
           <path
@@ -46,15 +45,17 @@ const EmojiPicker = ({ comment, setMyComment }) => {
       </button>
       {showEmojis && (
         <div
-          className={`${
-            comment == undefined ? "-bottom-30 h-48" : "h-48 -top-48 right-5"
-          } rounded-md absolute text-left overflow-hidden`}
+          className={`${comment == undefined ? "-bottom-30 h-48" : "h-48 -top-48 right-5"
+            } rounded-2xl absolute text-left overflow-hidden shadow-2xl z-50`}
         >
           <Picker
+            theme="auto"
             emojiSize={15}
             emojiButtonSize={24}
             data={data}
             onEmojiSelect={addEmoji}
+            previewPosition="none"
+            skinTonePosition="none"
           />
         </div>
       )}

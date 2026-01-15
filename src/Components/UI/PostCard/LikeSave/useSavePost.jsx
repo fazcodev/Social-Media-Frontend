@@ -5,67 +5,72 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useSavePost = (post) => {
   const [saved, setSaved] = useState(null);
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     setSaved(post?.isSaved);
   }, [post]);
-  const savePost = async (postId, reqType) => {
-    try {
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async ({ postId, reqType }) => {
       await axios({
-        method: reqType == "save" ? "post" : "delete",
+        method: reqType === "save" ? "post" : "delete",
         url: `${apiUrl}/posts/${postId}/${reqType}`,
         withCredentials: true,
       });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const queryClient = useQueryClient();
-  const { mutate, isPending } = useMutation({
-    mutationFn: (vars, ...args) => savePost(vars.postId, vars.reqType),
-    onSuccess: (date, variables, context) => {
-      setSaved(variables.reqType == "save");
-      queryClient.invalidateQueries(
-        {
-          queryKey: [
-            "profile",
-            "posts",
-            { type: "saved" }
-          ],
-          refetchType: 'all'
-        },
-        { throwonError: true }
-      );
-      queryClient.invalidateQueries(
-        {
-          queryKey: [
-            "profile",
-            "posts",
-            { type: "posted" }
-          ],
-          refetchType: 'inactive'
-        },
-        { throwonError: true }
-      );
-      queryClient.invalidateQueries(
-        {
-          queryKey: ['post', post._id, { type: 'info' }],
-          exact: true,
-          refetchType: 'none'
-        },
-        { throwonError: true }
-      )
-      queryClient.setQueryData(
-        ['feed'],
-        (prevPages) =>
-          prevPages.map((page) =>
+      return { reqType };
+    },
+    onMutate: async ({ reqType }) => {
+      // Store previous value for rollback
+      const previousSaved = saved;
+
+      // Optimistic update
+      setSaved(reqType === "save");
+
+      return { previousSaved };
+    },
+    onError: (err, variables, context) => {
+      // Rollback on error
+      console.log(err);
+      setSaved(context.previousSaved);
+    },
+    onSuccess: (data, variables) => {
+      const newSaved = variables.reqType === "save";
+
+      // Invalidate saved posts - refetch all since list changed
+      queryClient.invalidateQueries({
+        queryKey: ["profile", "posts", { type: "saved" }],
+        refetchType: "all",
+      });
+
+      // Invalidate posted queries (inactive only)
+      queryClient.invalidateQueries({
+        queryKey: ["profile", "posts", { type: "posted" }],
+        refetchType: "inactive",
+      });
+
+      // Invalidate post info query
+      queryClient.invalidateQueries({
+        queryKey: ["post", post._id, { type: "info" }],
+        exact: true,
+        refetchType: "none",
+      });
+
+      // Update feed cache with correct infinite query structure
+      queryClient.setQueryData(["feed"], (oldData) => {
+        if (!oldData) return oldData;
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) =>
             page.map((p) => {
               if (p._id === post._id) {
-                return { isSaved: saved, ...p };
+                return { ...p, isSaved: newSaved };
               }
               return p;
             })
-          )
-      );
+          ),
+        };
+      });
     },
   });
 

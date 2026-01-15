@@ -75,14 +75,13 @@ const CommentsList = ({ postId }) => {
                     ? lastCommentElementRef
                     : null
                 }
-                className={`${
-                  comment?.user?._id == localStorage.getItem("id")
+                className={`${comment?.user?._id == localStorage.getItem("id")
                     ? "justify-end"
                     : "justify-start"
-                } flex p-1`}
+                  } flex p-1`}
               >
-                <div className="flex gap-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)] border border-stone-300 items-start bg-stone-200 w-3/4 p-1 rounded-md">
-                  <div className="w-10 mtiny:w-6 rounded-full overflow-hidden flex justify-center items-center">
+                <div className="flex gap-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)] dark:shadow-[0_3px_10px_rgb(0,0,0,0.5)] border border-slate-300 dark:border-slate-600 items-start bg-slate-100 dark:bg-slate-700/80 w-3/4 p-2 rounded-xl">
+                  <div className="w-10 mtiny:w-6 rounded-full overflow-hidden flex justify-center items-center shrink-0">
                     <img
                       className="w-full"
                       src={
@@ -93,12 +92,12 @@ const CommentsList = ({ postId }) => {
                       alt=""
                     />
                   </div>
-                  <div className="w-4/5">
-                    <div className="flex justify-between">
-                      <div className="font-bold mtiny:font-semibold mtiny:text-sm">
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <div className="font-bold mtiny:font-semibold mtiny:text-sm text-slate-800 dark:text-slate-100">
                         {comment?.user?.name}
                       </div>
-                      <div className="text-xs mtiny:text-[8px] text-right">
+                      <div className="text-xs mtiny:text-[8px] text-slate-500 dark:text-slate-400">
                         {comment?.createdAt === "temp" ? (
                           <AccessTimeOutlined fontSize="small" />
                         ) : (
@@ -106,7 +105,7 @@ const CommentsList = ({ postId }) => {
                         )}
                       </div>
                     </div>
-                    <div className="text-sm mtiny:text-xs">{comment?.text}</div>
+                    <div className="text-sm mtiny:text-xs text-slate-700 dark:text-slate-200">{comment?.text}</div>
                   </div>
                 </div>
               </div>
@@ -114,7 +113,7 @@ const CommentsList = ({ postId }) => {
           })
         )}
 
-      
+
     </div>
   );
 };

@@ -8,7 +8,7 @@ import {
   BookmarkBorder,
 } from "@mui/icons-material";
 
-const LikeSavePost = ({post, liked, likePost, pendingLike }) => {
+const LikeSavePost = ({ post, liked, likePost, pendingLike }) => {
   // const { liked, likePost, isPending: pendingLike } = useLikePost(post);
   const { saved, savePost, isPending: pendingSave } = useSavePost(post);
 
@@ -21,16 +21,16 @@ const LikeSavePost = ({post, liked, likePost, pendingLike }) => {
             : () => likePost({ postId: post?._id, reqType: "like" })
         }
         disabled={pendingLike}
+        className="transition-transform duration-200 hover:scale-110 active:scale-95"
       >
         {liked ? (
           <Favorite
-            className={`text-red-600 ${
-              pendingLike ? "opacity-50" : "opacity-100"
-            }`}
+            className={`text-red-500 ${pendingLike ? "opacity-50" : "opacity-100"
+              }`}
           />
         ) : (
           <FavoriteBorder
-            className={`${pendingLike ? "opacity-50" : "opacity-100"}`}
+            className={`text-slate-600 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors ${pendingLike ? "opacity-50" : "opacity-100"}`}
           />
         )}
       </button>
@@ -41,12 +41,13 @@ const LikeSavePost = ({post, liked, likePost, pendingLike }) => {
             : () => savePost({ postId: post?._id, reqType: "save" })
         }
         disabled={pendingSave}
+        className="transition-transform duration-200 hover:scale-110 active:scale-95"
       >
         {saved ? (
-          <Bookmark className={`${pendingSave ? "opacity-50" : "opacity-100"}`} />
+          <Bookmark className={`text-slate-800 dark:text-slate-200 ${pendingSave ? "opacity-50" : "opacity-100"}`} />
         ) : (
           <BookmarkBorder
-            className={`${pendingSave ? "opacity-50" : "opacity-100"}`}
+            className={`text-slate-600 dark:text-slate-400 hover:text-accent dark:hover:text-cyan-400 transition-colors ${pendingSave ? "opacity-50" : "opacity-100"}`}
           />
         )}
       </button>

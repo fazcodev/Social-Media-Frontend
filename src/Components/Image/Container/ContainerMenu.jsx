@@ -13,36 +13,48 @@ const ContainerMenu = ({ menu, title, editModeRef }) => {
 
   return (
     <div
-      style={{ borderColor: "#bfbfbf" }}
-      className="rounded-t-lg border-b p-0.5 flex justify-center"
+      className="rounded-t-2xl border-b border-white/20 dark:border-slate-700/50 p-4 flex justify-between items-center bg-white/50 dark:bg-slate-800/50 backdrop-blur-md relative z-50"
     >
-      {"buttons" in menu[menuIdx] && menu[menuIdx].buttons[0] == "Back" && (
-        <button onClick={backButton}>Back</button>
-      )}
-      <div className="w-1/2 text-xl inline-block">{menu[menuIdx].title}</div>
-      <ul className="list-none inline text-right">
-        {"buttons" in menu[menuIdx] &&
-          menu[menuIdx].buttons.map((value, idx) => {
-            return (
-              value != "Back" && (
-                <li key={`button_${idx}`} className="inline">
-                  <button
-                    className="bg-blue-400 px-2 py-0.5 rounded-md"
-                    onClick={
-                      value == "Edit"
-                        ? editButton
-                        : (value == "Next" || value == "Upload Avatar")
-                        ? ()=>uploadButton(editModeRef)
-                        : ()=>shareButton(editedImage)
-                    }
-                  >
-                    {value}
-                  </button>
-                </li>
-              )
-            );
-          })}
-      </ul>
+      <div className="w-16 text-left">
+        {"buttons" in menu[menuIdx] && menu[menuIdx].buttons[0] == "Back" && (
+          <button
+            onClick={backButton}
+            className="bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 px-4 py-1.5 rounded-xl text-sm font-bold transition-all transform hover:scale-105 shadow-sm"
+          >
+            Back
+          </button>
+        )}
+      </div>
+
+      <div className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
+        {menu[menuIdx].title}
+      </div>
+
+      <div className="w-16 text-right">
+        <ul className="list-none inline">
+          {"buttons" in menu[menuIdx] &&
+            menu[menuIdx].buttons.map((value, idx) => {
+              return (
+                value != "Back" && (
+                  <li key={`button_${idx}`} className="inline">
+                    <button
+                      className="bg-accent hover:bg-accent-dark text-white px-4 py-1.5 rounded-xl text-sm font-bold shadow-lg shadow-accent/20 transition-all transform hover:scale-105"
+                      onClick={
+                        value == "Edit"
+                          ? editButton
+                          : (value == "Next" || value == "Upload Avatar")
+                            ? () => uploadButton(editModeRef)
+                            : () => shareButton(editedImage)
+                      }
+                    >
+                      {value}
+                    </button>
+                  </li>
+                )
+              );
+            })}
+        </ul>
+      </div>
     </div>
   );
 };

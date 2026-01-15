@@ -24,7 +24,7 @@ const LikeSaveCard = ({ post }) => {
   return (
     <>
       <div className="w-full flex justify-between my-2">
-        <div className="">
+        <div className="flex items-center gap-4">
           <button
             onClick={
               liked
@@ -32,23 +32,25 @@ const LikeSaveCard = ({ post }) => {
                 : () => likePost({ postId: post?._id, reqType: "like" })
             }
             disabled={pendingLike}
+            className="group focus:outline-none transition-transform active:scale-90"
           >
             {liked ? (
               <Favorite
-                className={`text-red-600 ${
-                  pendingLike ? "opacity-50" : "opacity-100"
-                }`}
+                className={`text-red-500 drop-shadow-sm ${pendingLike ? "opacity-50" : "opacity-100"
+                  } group-hover:scale-110 transition-transform duration-500 ease-out`}
+                fontSize="medium"
               />
             ) : (
               <FavoriteBorder
-                className={`${pendingLike ? "opacity-50" : "opacity-100"}`}
+                className={`text-slate-600 dark:text-slate-400 group-hover:text-red-500 ${pendingLike ? "opacity-50" : "opacity-100"
+                  } group-hover:scale-110 transition-all duration-500 ease-out`}
+                fontSize="medium"
               />
             )}
           </button>
-          <button className="ml-3">
-            <Send />
+          <button className="group focus:outline-none transition-transform active:scale-90">
+            <Send className="text-slate-600 dark:text-slate-400 group-hover:text-blue-500 -rotate-45 mb-1 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-500 ease-out" fontSize="medium" />
           </button>
-          {/* <button className="ml-3"><MapsUgcRounded/></button> */}
         </div>
         <button
           onClick={
@@ -57,19 +59,22 @@ const LikeSaveCard = ({ post }) => {
               : () => savePost({ postId: post?._id, reqType: "save" })
           }
           disabled={pendingSave}
+          className="group focus:outline-none transition-transform active:scale-90"
         >
           {saved ? (
             <Bookmark
-              className={`${pendingSave ? "opacity-50" : "opacity-100"}`}
+              className={`text-accent drop-shadow-sm ${pendingSave ? "opacity-50" : "opacity-100"} group-hover:scale-110 transition-transform duration-200`}
+              fontSize="medium"
             />
           ) : (
             <BookmarkBorder
-              className={`${pendingSave ? "opacity-50" : "opacity-100"}`}
+              className={`text-slate-400 dark:text-slate-500 group-hover:text-accent ${pendingSave ? "opacity-50" : "opacity-100"} group-hover:scale-110 transition-all duration-200`}
+              fontSize="medium"
             />
           )}
         </button>
       </div>
-      {likesCount > 0 && <p>{`${likesCount} likes`}</p>}
+      {likesCount > 0 && <p className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">{`${likesCount} likes`}</p>}
     </>
   );
 };

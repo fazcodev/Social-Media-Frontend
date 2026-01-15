@@ -7,7 +7,6 @@ import { authActions } from "../../Store/Auth";
 import { apiUrl } from "../../Config/config";
 import { googleSignIn } from "./O-Auth_SignIn";
 import { googleProvider, auth } from "../../Config/firebase-config";
-import AuthBg from "../Assets/AuthBg.jpg";
 
 const SignIn = () => {
   const usernameRef = useRef();
@@ -15,7 +14,6 @@ const SignIn = () => {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  // const {login, googleSignIn} = useContext(AuthContext)
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -39,7 +37,6 @@ const SignIn = () => {
       navigate("/home");
       dispatch(
         authActions.setAuthData({
-          // token: res.data.token,
           name: res.data.user.name,
           email: res.data.user.email,
           username: res.data.user.username,
@@ -51,11 +48,12 @@ const SignIn = () => {
       );
     } catch (er) {
       console.log(er);
-      if(er?.response)setError(er.response.data.error);
+      if (er?.response) setError(er.response.data.error);
       else setError(er.message)
     }
     setLoading(false);
   };
+
   const handleGoogleSignIn = async (e) => {
     setError("");
     setLoading(true);
@@ -84,7 +82,6 @@ const SignIn = () => {
       navigate("/home");
       dispatch(
         authActions.setAuthData({
-          // token: res.data.token,
           name: res.data.user.name,
           email: res.data.user.email,
           username: res.data.user.username,
@@ -96,84 +93,95 @@ const SignIn = () => {
       );
     } catch (er) {
       console.error(er);
-      if(er.response)setError(er.response.data.error);
+      if (er.response) setError(er.response.data.error);
       setError(er.message)
     }
     setLoading(false);
   };
+
   return (
-    <div
-      className="flex justify-center items-center h-screen bg-cover bg-no-repeat bg-center"
-      style={{ backgroundImage: `url(${AuthBg})` }}
-    >
-      <div className="text-center border-neutral-500 border-2 rounded-xl bg-gray-100 bg-opacity-90 shadow-[0px_3px_6px_6px_rgba(0,_0,_0,_0.16)] px-4 py-8 w-1/3 mlg:w-1/2 mtiny:w-11/12 my-5">
-        <h1 className="xl:text-4xl text-3xl font-semibold">Log In</h1>
-        {error && <Alert severity="error">{error}</Alert>}
-        {/* <button onClick={handleGoogleSignIn} className="border inline-block mx-auto w-fit border-blue-300 bg-gray-200 hover:bg-gray-300 my-3 px-3 py-1 text-sm font-semibold"><img className="w-5 inline-block mr-2" src={googlelogo} alt='Sign in with google' />Log in with google</button> */}
-        <div>
-          <div className="inline-block w-1/6 h-0.5 border-b border-black" />
-          <span className="relative top-1 text-xs font-medium">
-            {" "}
-            or continue with Google{" "}
-          </span>
-          <div className="inline-block w-1/6 h-0.5 border-b border-black" />
+    <div className="flex justify-center items-center h-screen w-full bg-transparent text-slate-900 dark:text-white transition-colors duration-300 relative overflow-hidden">
+      <div className="relative z-10 w-full max-w-md p-8 bg-white/20 dark:bg-slate-900/40 backdrop-blur-2xl border-2 border-white/50 dark:border-white/10 rounded-3xl shadow-2xl animate-fade-in shadow-[0_8px_32px_0_rgba(31,38,135,0.37)]">
+
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-heading font-bold text-slate-800 dark:text-white mb-2">Welcome Back</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm">Sign in to continue to your account</p>
+        </div>
+
+        {error && (
+          <div className="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg text-sm">
+            {error}
+          </div>
+        )}
+
+        <button
+          disabled={loading}
+          onClick={handleGoogleSignIn}
+          className="w-full flex items-center justify-center gap-3 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-sm mb-5 backdrop-blur-md"
+        >
+          <img
+            className="w-5 h-5"
+            src="https://img.icons8.com/color/48/000000/google-logo.png"
+            alt="google"
+          />
+          <span>Sign in with Google</span>
+        </button>
+
+        <div className="flex items-center gap-4 mb-5">
+          <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
+          <span className="text-xs font-medium text-slate-400 dark:text-slate-400 uppercase tracking-wider">Or</span>
+          <div className="h-px flex-1 bg-slate-200 dark:bg-slate-700"></div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="username" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">
+              Username
+            </label>
+            <input
+              ref={usernameRef}
+              id="username"
+              name="username"
+              type="username"
+              required
+              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400"
+              placeholder="Enter your username"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5 ml-1">
+              Password
+            </label>
+            <input
+              ref={passwordRef}
+              id="password"
+              name="password"
+              type="password"
+              required
+              className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 focus:border-accent focus:ring-2 focus:ring-accent/20 outline-none transition-all duration-200 text-slate-900 dark:text-white placeholder-slate-400"
+              placeholder="Enter your password"
+            />
+          </div>
+
           <button
             disabled={loading}
-            onClick={handleGoogleSignIn}
-            className={`block bg-neutral-200 ${loading ? 'opacity-65' : 'hover:bg-neutral-300'} border-neutral-400 transition-all border-2 w-3/4 mtiny:w-full mx-auto my-4 py-2 px-2 rounded`}
+            type="submit"
+            className={`w-full py-3 px-4 rounded-xl text-white font-semibold text-center transition-all duration-200 shadow-lg shadow-accent/25 mt-2 ${loading
+              ? "bg-slate-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-accent to-accent-dark hover:shadow-accent/40 hover:scale-[1.02] active:scale-[0.98]"
+              }`}
           >
-            <img
-              className="w-6 inline-block"
-              src="https://img.icons8.com/color/48/000000/google-logo.png"
-              alt="google"
-            />
-            <span className="text-black font-semibold ml-4">
-              Sign in with Google
-            </span>
+            {loading ? "Signing in..." : "Log In"}
           </button>
-        </div>
-        <form className="text-left my-5 xl:text-xl text-md" onSubmit={handleSubmit}>
-          <label htmlFor="username">
-            <b>Username</b>
-          </label>
-          <input
-            ref={usernameRef}
-            id="username"
-            className="inline-block mb-3 w-full px-2 py-1 border-solid border"
-            name="username"
-            placeholder="Username"
-            type="username"
-            required
-          ></input>
-          <label htmlFor="password">
-            <b>Password</b>
-          </label>
-          <input
-            ref={passwordRef}
-            id="password"
-            className="inline-block mb-4 w-full px-2 py-1 border-solid border"
-            name="password"
-            placeholder="Password"
-            type="password"
-            required
-          ></input>
-          <div className="text-center font-medium">
-            <button
-              disabled={loading}
-              className={`inline-block mx-auto text-white ${
-                loading
-                  ? "bg-blue-300 cursor-wait"
-                  : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
-              } shadow-[0px_2px_2px_1px_rgba(0,_0,_0,_0.16)] rounded-md py-1 px-2.5`}
-              type="submit"
-            >
-              Log In
-            </button>
-          </div>
         </form>
-        <button className="font-bold text-blue-600 cursor-pointer hover:text-blue-800">
-          <Link to="/signup">Create an account</Link>
-        </button>
+
+        <div className="mt-6 text-center text-slate-500 dark:text-slate-400 text-sm">
+          Don't have an account?{" "}
+          <Link to="/signup" className="font-semibold text-accent hover:text-accent-dark transition-colors">
+            Create an account
+          </Link>
+        </div>
       </div>
     </div>
   );

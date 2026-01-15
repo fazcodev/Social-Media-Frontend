@@ -10,7 +10,7 @@ const CardComments = ({ post }) => {
     <>
       {openPostModal && (
         <Modal
-          postOwner = {post?.owner}
+          postOwner={post?.owner}
           postId={post?._id}
           title="View Post"
           openModalHandler={setOpenPostModal}
@@ -18,11 +18,11 @@ const CardComments = ({ post }) => {
       )}
       {commentsCount >= 0 && (
         <button
-          className="text-blue-500"
+          className="text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 text-sm font-medium transition-colors mb-2"
           onClick={() => setOpenPostModal(true)}
         >
           View all{" "}
-          <span className="text-black">{` ${commentsCount} comments`}</span>
+          <span className="text-slate-900 dark:text-white font-semibold">{` ${commentsCount} comments`}</span>
         </button>
       )}
       <CommentSection

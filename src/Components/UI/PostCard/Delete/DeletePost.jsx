@@ -47,11 +47,11 @@ const DeletePost = ({ post, modalHandler }) => {
           onConfirm={mutation.mutate}
           onCancel={() => setDeleteWarning(false)}
           openModalHandler={setDeleteWarning}
-          pending = {mutation.isPending}
+          pending={mutation.isPending}
         />
       )}
       {post?.owner?.username == localStorage.getItem("username") && (
-        <button onClick={() => setDeleteWarning(true)}>
+        <button onClick={() => setDeleteWarning(true)} className="transition-transform duration-200 hover:scale-110 active:scale-95">
           <Delete fontSize="small" color="error" />
         </button>
       )}

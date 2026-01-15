@@ -109,21 +109,19 @@ export default function CommentSection({ comment, cls, postId }) {
     <div className={`${cls ? cls : ""}`}>
       <textarea
         onFocus={comment ? prefetchComments : null}
-        rows={comment == undefined ? 5: 2}
+        rows={comment == undefined ? 5 : 2}
         value={comment != undefined ? myComment : caption}
         onChange={onTextChange}
-        className="img-wrapper mtiny:h-8 w-full outline-none resize-none"
-        placeholder={`${
-          comment == undefined ? "Add a caption" : "Add a comment"
-        }`}
+        className="img-wrapper mtiny:h-8 w-full outline-none resize-none bg-transparent text-slate-800 dark:text-slate-200 placeholder-slate-500 dark:placeholder-slate-400"
+        placeholder={`${comment == undefined ? "Add a caption" : "Add a comment"
+          }`}
       />
 
       <div className="flex h-fit relative justify-between">
         <EmojiPicker comment={comment} setMyComment={setMyComment} />
         <div
-          className={`${
-            caption.length || myComment.length ? "opacity-100" : "opacity-50"
-          }`}
+          className={`${caption.length || myComment.length ? "opacity-100" : "opacity-50"
+            }`}
         >
           {comment == undefined && (
             <span className="opacity-50">{caption.length}/2,200</span>

@@ -17,17 +17,16 @@ const LikePostAnimation = ({ post, liked, likePost }) => {
   return (
     <div
       onDoubleClick={handleLikeAnimation}
-      className="relative cursor-pointer w-1/2 mtiny:w-full mtiny:h-1/2 bg-black overflow-y-scroll flex flex-col justify-center items-center img-wrapper"
+      className="relative cursor-pointer w-1/2 mtiny:w-full mtiny:h-1/2 bg-slate-100 dark:bg-slate-800 overflow-y-scroll flex flex-col justify-center items-center img-wrapper"
     >
       <img className="w-full h-full object-contain peer" src={post?.imageUrl} alt="" />
       <Favorite
         fontSize="large"
-        className={`${
-          heartActive ? "heart" : ""
-        } absolute opacity-0 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600`}
+        className={`${heartActive ? "heart" : ""
+          } absolute opacity-0 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600`}
       />
-      <p className={`${(post?.description)?'': 'hidden'} text-white text-sm font-medium p-2 transition-all duration-500 opacity-0 mtiny:opacity-100 peer-hover:opacity-100`}>{post?.description}</p>
-      
+      <p className={`${(post?.description) ? '' : 'hidden'} text-slate-800 dark:text-slate-100 text-sm font-medium p-2 transition-all duration-500 opacity-0 mtiny:opacity-100 peer-hover:opacity-100`}>{post?.description}</p>
+
     </div>
   );
 };

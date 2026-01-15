@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import {
   useMutation,
   useQueries,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import PropTypes from "prop-types";
 import axios from "axios";
 import Modal from "../UI/Modal";
 import { CameraAlt } from "@mui/icons-material";
@@ -38,7 +36,7 @@ const ProfileDesc = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        predicate: (query)=>{
+        predicate: (query) => {
           return query.queryKey[0] === "profile" && query.queryKey[1] === "desc" && (query.queryKey.at(-1) === currUser || query.queryKey.at(-1) === username)
         }
       });
@@ -48,19 +46,19 @@ const ProfileDesc = () => {
   const userInfo = useQueries({
     queries: [
       {
-        queryKey: ["profile", 'desc', {type: 'followers'}, username],
+        queryKey: ["profile", 'desc', { type: 'followers' }, username],
         queryFn: () => fetchFollowers(username),
         staleTime: 5000 * 60,
         refetchOnWindowFocus: false,
       },
       {
-        queryKey: ["profile", 'desc', {type: 'followings'}, username],
+        queryKey: ["profile", 'desc', { type: 'followings' }, username],
         queryFn: () => fetchFollowings(username),
         staleTime: 5000 * 60,
         refetchOnWindowFocus: false,
       },
       {
-        queryKey: ["profile", 'desc', {type: 'info'}, username],
+        queryKey: ["profile", 'desc', { type: 'info' }, username],
         queryFn: () => fetchUserInfo(username),
         staleTime: 5000 * 60,
         refetchOnWindowFocus: false,
@@ -83,27 +81,26 @@ const ProfileDesc = () => {
       {editAvatarModal && (
         <Modal title="Edit Avatar" openModalHandler={setEditAvatarModal} />
       )}
-      <div className="p-3 msm:px-2">
-        <div className="flex justify-center items-center gap-10 mlg:gap-8 mmd:gap-5">
+      <div className="p-6 msm:px-4">
+        <div className="flex justify-center items-center gap-10 mlg:gap-8 mmd:gap-5 max-w-4xl mx-auto">
           <div
             onClick={username === currUser ? () => setEditAvatarModal(true) : null}
-            className={`relative aspect-square inline-block rounded-full shrink w-[25%] items-center img-overlay ${
-              username === currUser
-                ? "cursor-pointer"
-                : ""
-            }`}
+            className={`relative aspect-square inline-block rounded-full shrink w-[25%] items-center img-overlay ${username === currUser
+              ? "cursor-pointer group"
+              : ""
+              }`}
           >
             {username === currUser && (
               <>
-                <div className="overlay w-full rounded-full" />
-                <div className="middle text-xs text-center text-gray-300">
+                <div className="overlay w-full rounded-full bg-black/40 backdrop-blur-sm transition-opacity opacity-0 group-hover:opacity-100" />
+                <div className="middle text-xs text-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
                   <CameraAlt fontSize="small" />
-                  <p>Change Profile Photo</p>
+                  <p>Change</p>
                 </div>
               </>
             )}
             <img
-              className="rounded-full w-full object-cover"
+              className="rounded-full w-full h-full object-cover border-4 border-white dark:border-slate-800 shadow-lg"
               alt="User Avatar"
               src={
                 (userInfo[2].data?.avatarURL)
@@ -112,14 +109,14 @@ const ProfileDesc = () => {
               }
             />
           </div>
-          <div className="flex-col flex gap-3">
-            <div className="flex gap-5 mtiny:flex-col mtiny:gap-2">
-              <h1 className="text-2xl mtiny:text-xl font-bold">{username}</h1>
+          <div className="flex-col flex gap-4">
+            <div className="flex gap-6 mtiny:flex-col mtiny:gap-3 items-center">
+              <h1 className="text-2xl mtiny:text-xl font-bold text-slate-900 dark:text-white tracking-tight">{username}</h1>
               <div>
                 {username === currUser ? (
                   <button
                     onClick={() => navigate("/Profile/edit")}
-                    className="bg-stone-100 hover:bg-stone-200 rounded-md px-2 py-0.5 text-sm font-bold transition-all"
+                    className="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 hover:bg-slate-300 dark:hover:bg-slate-700 rounded-lg px-4 py-1.5 text-sm font-bold transition-all shadow-sm"
                   >
                     Edit Profile
                   </button>
@@ -127,7 +124,7 @@ const ProfileDesc = () => {
                   <button
                     onClick={toggleFollowUser}
                     disabled={mutation.isPending || userInfo[0]?.isFetching}
-                    className={`disabled:opacity-50 bg-blue-500 hover:bg-blue-600 rounded-lg px-3 text-white text-sm font-bold transition-all`}
+                    className={`disabled:opacity-50 bg-accent hover:bg-accent-dark rounded-lg px-6 py-1.5 text-white text-sm font-bold transition-all shadow-md shadow-accent/20`}
                   >
                     {userInfo[0]?.data?.some(
                       (u) => u.follower === localStorage.getItem("id")
@@ -138,22 +135,20 @@ const ProfileDesc = () => {
                 )}
               </div>
             </div>
-            <div className="flex gap-3 text-center shrink mtiny:gap-1">
-              <h1 className="text-sm font-bold mtiny:font-semibold">{`${userInfo[2]?.data?.postsCnt ? userInfo[2].data.postsCnt : 0} Posts`}</h1>
-              <h1 className="text-sm font-bold mtiny:font-semibold">{`${
-                userInfo[0]?.data?.length ? userInfo[0].data.length : 0
-              } Followers`}</h1>
-              <h1 className="text-sm font-bold mtiny:font-semibold">{`${
-                userInfo[1]?.data?.length ? userInfo[1].data.length : 0
-              } Following`}</h1>
+            <div className="flex gap-6 text-center shrink mtiny:gap-3 text-slate-700 dark:text-slate-300">
+              <h1 className="text-base font-semibold"><span className="font-bold text-slate-900 dark:text-white mr-1">{`${userInfo[2]?.data?.postsCnt ? userInfo[2].data.postsCnt : 0}`}</span>Posts</h1>
+              <h1 className="text-base font-semibold"><span className="font-bold text-slate-900 dark:text-white mr-1">{`${userInfo[0]?.data?.length ? userInfo[0].data.length : 0
+                }`}</span>Followers</h1>
+              <h1 className="text-base font-semibold"><span className="font-bold text-slate-900 dark:text-white mr-1">{`${userInfo[1]?.data?.length ? userInfo[1].data.length : 0
+                }`}</span>Following</h1>
             </div>
-            <div className="text-left">
-              <h1 className="text-lg mtiny:text-base mtiny:font-semibold font-bold">
+            <div className="text-left space-y-1">
+              <h1 className="text-lg mtiny:text-base font-bold text-slate-900 dark:text-white">
                 {userInfo[2]?.data?.name}
               </h1>
-              <h1 className="text-base mtiny:text-sm font-medium">
+              <p className="text-base mtiny:text-sm font-medium text-slate-600 dark:text-slate-400 whitespace-pre-wrap leading-relaxed max-w-lg">
                 {userInfo[2]?.data?.bio}
-              </h1>
+              </p>
             </div>
           </div>
         </div>

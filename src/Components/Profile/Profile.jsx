@@ -34,12 +34,12 @@ export default function Profile() {
 
   return (
     <div className="flex flex-1 items-start justify-evenly overflow-y-auto">
-      <div className="grow shrink basis-[85%] border-r mmd:basis-[80%]">
+      <div className="grow shrink basis-[85%] border-r-2 border-slate-200 dark:border-slate-800 mmd:basis-[80%] transition-colors duration-300 min-h-screen">
         <ProfileDesc />
         <div>
-          <div ref={outerRef} className="w-full bg-stone-300 overflow-hidden">
+          <div ref={outerRef} className="w-full bg-slate-200 dark:bg-slate-800/50 h-[2px] mt-4 relative">
             <div
-              className="slider bg-black"
+              className="slider bg-accent shadow-[0_0_10px_rgba(56,189,248,0.5)]"
               style={{
                 width: navInfo.width,
                 left: navInfo.left,
@@ -50,37 +50,37 @@ export default function Profile() {
             ></div>
           </div>
 
-          <div className="flex h-12 items-center justify-center gap-16">
+          <div className="flex h-12 items-center justify-center gap-16 mt-2">
             <NavLink
               to="/profile/posts"
               className={({ isActive }) =>
                 isActive
-                  ? "sidebarItem font-semibold"
-                  : "sidebarItem font-semibold text-stone-400"
+                  ? "sidebarItem font-bold text-accent flex items-center transition-colors"
+                  : "sidebarItem font-semibold text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 flex items-center transition-colors"
               }
               ref={location.pathname === "/profile/posts" ? elementRef : null}
             >
               <GridOnSharp fontSize="small" />
-              <span className="ml-2">POSTS</span>
+              <span className="ml-2 tracking-wide text-sm">POSTS</span>
             </NavLink>
             <NavLink
               to="/profile/saved"
               className={({ isActive }) =>
                 isActive
-                  ? "sidebarItem font-semibold"
-                  : "sidebarItem font-semibold text-stone-400"
+                  ? "sidebarItem font-bold text-accent flex items-center transition-colors"
+                  : "sidebarItem font-semibold text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 flex items-center transition-colors"
               }
               ref={location.pathname === "/profile/saved" ? elementRef : null}
             >
               <BookmarkBorderSharp fontSize="small" />
-              <span className="ml-2">SAVED</span>
+              <span className="ml-2 tracking-wide text-sm">SAVED</span>
             </NavLink>
           </div>
         </div>
         {location.pathname === "/profile/posts" ? (
-          <ProfilePosts username = {username} />
+          <ProfilePosts username={username} />
         ) : location.pathname === "/profile/saved" ? (
-          <SavedPosts username = {username} />
+          <SavedPosts username={username} />
         ) : (
           navigate("/404")
         )}

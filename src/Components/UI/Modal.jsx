@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import Backdrop from "./Backdrop";
@@ -6,6 +7,13 @@ import ImageContainer from "../Image/ImageContainer";
 import { ContainerCtxProvider } from "../Image/Context/container-context";
 
 export default function Modal(props) {
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, []);
+
   return (
     <>
       {ReactDOM.createPortal(

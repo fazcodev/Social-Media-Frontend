@@ -15,7 +15,7 @@ const Home = () => {
   // } = usePagFetch("", pageNumber, 10, url);
   const { data, hasNextPage, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["feed"],
-    queryFn: async({ pageParam, ...args }) => {
+    queryFn: async ({ pageParam, ...args }) => {
       const limit = 5;
       const res = await axios.get(`${apiUrl}/feeds`, {
         params: { skip: pageParam * limit, limit: limit },
@@ -49,21 +49,27 @@ const Home = () => {
   );
 
   return (
-    <div className="text-center flex-1 max-h-screen overflow-scroll img-wrapper">
-      {data?.pages?.length > 0 && data?.pages?.map((page, idx) =>
-        page?.map((post, index) => {
-          if (data.pages.length === idx + 1 && page.length === index + 1) {
-            return (
-              <div ref={lastPostElementRef} key={post._id}>
-                <FeedCard post={post} />
-              </div>
-            );
-          } else {
-            return <FeedCard key={post._id} post={post} />;
-          }
-        })
-      )}
-      {isFetching && <CircularProgress />}
+    <div className="w-full min-h-screen py-8 px-4 flex flex-col items-center">
+      <div className="w-full max-w-xl flex flex-col gap-6">
+        {data?.pages?.length > 0 && data?.pages?.map((page, idx) =>
+          page?.map((post, index) => {
+            if (data.pages.length === idx + 1 && page.length === index + 1) {
+              return (
+                <div ref={lastPostElementRef} key={post._id}>
+                  <FeedCard post={post} />
+                </div>
+              );
+            } else {
+              return <FeedCard key={post._id} post={post} />;
+            }
+          })
+        )}
+        {isFetching && (
+          <div className="flex justify-center p-4">
+            <CircularProgress sx={{ color: '#38bdf8' }} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
