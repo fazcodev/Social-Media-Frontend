@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import Moment from "react-moment";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import axios from "axios";
+
+dayjs.extend(relativeTime);
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 
@@ -77,7 +80,7 @@ const PostCard = ({ postId, postOwner, openModalHandler }) => {
                   {post?.owner?.username}
                 </div>
                 <div className="text-xs mtiny:text-[10px] text-slate-500 dark:text-slate-400">
-                  <Moment fromNow>{post?.createdAt}</Moment>
+                  {dayjs(post?.createdAt).fromNow()}
                 </div>
               </div>
             </div>
