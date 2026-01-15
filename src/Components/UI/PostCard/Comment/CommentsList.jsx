@@ -2,10 +2,13 @@ import { useRef, useCallback, useState } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { v4 as uuid } from "uuid";
 import PropTypes from "prop-types";
-import Moment from "react-moment";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { fetchComments } from "../../../../Utils/FetchUtils";
 import defaultAvatar from "../../../Assets/Default_Avatar.png";
 import { AccessTimeOutlined } from "@mui/icons-material";
+
+dayjs.extend(relativeTime);
 
 const CommentsList = ({ postId }) => {
   const bottomRef = useRef();
@@ -76,8 +79,8 @@ const CommentsList = ({ postId }) => {
                     : null
                 }
                 className={`${comment?.user?._id == localStorage.getItem("id")
-                    ? "justify-end"
-                    : "justify-start"
+                  ? "justify-end"
+                  : "justify-start"
                   } flex p-1`}
               >
                 <div className="flex gap-2 shadow-[0_3px_10px_rgb(0,0,0,0.2)] dark:shadow-[0_3px_10px_rgb(0,0,0,0.5)] border border-slate-300 dark:border-slate-600 items-start bg-slate-100 dark:bg-slate-700/80 w-3/4 p-2 rounded-xl">
@@ -101,7 +104,7 @@ const CommentsList = ({ postId }) => {
                         {comment?.createdAt === "temp" ? (
                           <AccessTimeOutlined fontSize="small" />
                         ) : (
-                          <Moment fromNow>{comment?.createdAt}</Moment>
+                          dayjs(comment?.createdAt).fromNow()
                         )}
                       </div>
                     </div>
