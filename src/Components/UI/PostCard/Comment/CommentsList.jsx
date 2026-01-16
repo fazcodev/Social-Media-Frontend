@@ -13,19 +13,6 @@ dayjs.extend(relativeTime);
 const CommentsList = ({ postId }) => {
   const bottomRef = useRef();
   const observer = useRef();
-  // useEffect(() => {
-  //   const fetchComments = async () => {
-  //     try {
-  //       const res = await axios.get(`${apiUrl}/posts/${postId}/comments`, {
-  //         withCredentials : true
-  //       });
-  //       setComments(res.data);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-  //   fetchComments(postId)
-  // }, [postId, setComments]);
 
   const { data, hasNextPage, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["post", postId, { type: "comments" }],
@@ -60,10 +47,6 @@ const CommentsList = ({ postId }) => {
     },
     [isFetching, hasNextPage]
   );
-  // useEffect(() => {
-  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  // }, []);
-
   return (
     <div className="h-full grow flex flex-col-reverse overflow-y-scroll">
       <div ref={bottomRef} />

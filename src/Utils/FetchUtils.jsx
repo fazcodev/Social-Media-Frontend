@@ -1,11 +1,11 @@
 import axios from "axios";
 import { apiUrl } from "../Config/config";
 
-export const fetchPosts = async (username, type, {pageParam, ...args}) => {
+export const fetchPosts = async (username, type, { pageParam = 0, ...args } = {}) => {
   try {
     const limit = 3;
     const url = type === 'saved' ? `${apiUrl}/posts/${username}/saved` : `${apiUrl}/${username}/posts`;
-    const res = await axios.get(url, { withCredentials: type === "saved", params: {skip: pageParam*limit, limit} });
+    const res = await axios.get(url, { withCredentials: type === "saved", params: { skip: pageParam * limit, limit } });
     return res.data;
   } catch (err) {
     console.log(err);
@@ -52,12 +52,12 @@ export const fetchPost = async (postId) => {
   }
 }
 
-export const fetchComments = async (postId, {pageParam, ...args}) => {
+export const fetchComments = async (postId, { pageParam = 0, ...args } = {}) => {
   try {
     const limit = 10;
     const res = await axios.get(`${apiUrl}/posts/${postId}/comments`, {
       withCredentials: true,
-      params: {skip: pageParam*limit, limit}
+      params: { skip: pageParam * limit, limit }
     });
     return res.data;
   } catch (err) {
@@ -67,39 +67,47 @@ export const fetchComments = async (postId, {pageParam, ...args}) => {
 export const prefetchProfile = async (username, queryClient) => {
   try {
     let promises = [
-      queryClient.prefetchQuery({
-        queryKey: ['profile', 'posts', {type: 'posted'}, username],
-        queryFn: () => fetchPosts(username, "posts"),
-        staleTime: 10000*60,
-        refetchOnWindowFocus: false,
+      queryClient.prefetchInfiniteQuery({
+        queryKey: ['profile', 'posts', { type: 'posted' }, username],
+        queryFn: ({ pageParam = 0 }) => fetchPosts(username, "posts", { pageParam }),
+        getNextPageParam: (lastPage, pages) => {
+          if (!lastPage || lastPage.length < 3) return undefined;
+          return pages.length;
+        },
+        initialPageParam: 0,
+        staleTime: 10000 * 60,
       }),
       queryClient.prefetchQuery({
-        queryKey: ['profile', 'desc', {type: 'followers'}, username],
+        queryKey: ['profile', 'desc', { type: 'followers' }, username],
         queryFn: () => fetchFollowers(username),
-        staleTime: 10000*60,
-        refetchOnWindowFocus: false,
-        
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['profile', 'desc', {type: 'followings'}, username],
-        queryFn: () => fetchFollowings(username),
-        staleTime: 10000*60,
+        staleTime: 10000 * 60,
         refetchOnWindowFocus: false,
 
       }),
       queryClient.prefetchQuery({
-        queryKey: ['profile', 'desc', {type: 'info'}, username],
+        queryKey: ['profile', 'desc', { type: 'followings' }, username],
+        queryFn: () => fetchFollowings(username),
+        staleTime: 10000 * 60,
+        refetchOnWindowFocus: false,
+
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ['profile', 'desc', { type: 'info' }, username],
         queryFn: () => fetchUserInfo(username),
-        staleTime: 10000*60,
+        staleTime: 10000 * 60,
         refetchOnWindowFocus: false,
       }),
     ];
-    if(username === localStorage.getItem('username')){
-      promises.push(queryClient.prefetchQuery({
-        queryKey: ['profile', 'posts', {type: 'saved'}, username],
-        queryFn: () => fetchPosts(username, "saved"),
-        staleTime: 10000*60,
-        refetchOnWindowFocus: false,
+    if (username === localStorage.getItem('username')) {
+      promises.push(queryClient.prefetchInfiniteQuery({
+        queryKey: ['profile', 'posts', { type: 'saved' }, username],
+        queryFn: ({ pageParam = 0 }) => fetchPosts(username, "saved", { pageParam }),
+        getNextPageParam: (lastPage, pages) => {
+          if (!lastPage || lastPage.length < 3) return undefined;
+          return pages.length;
+        },
+        initialPageParam: 0,
+        staleTime: 10000 * 60,
       }));
     }
     await Promise.all(promises);

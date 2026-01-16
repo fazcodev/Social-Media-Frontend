@@ -64,7 +64,7 @@ const PostCard = ({ postId, postOwner, openModalHandler }) => {
       <div className="left-1/2 top-1/2 h-3/4 mlg:h-3/5 -translate-x-1/2 -translate-y-1/2 fixed z-50 rounded-2xl overflow-hidden bg-white/90 dark:bg-slate-900/90 border border-white/40 dark:border-slate-600 shadow-[0_0_50px_-10px_rgba(0,0,0,0.3)] backdrop-blur-3xl w-2/3 mlg:w-11/12 flex mtiny:flex-col">
         <LikePostAnimation post={post} liked={liked} likePost={likePost} />
         <div className="w-1/2 mtiny:w-full mtiny:h-1/2 grow text-left flex flex-col justify-between">
-          <div className="w-full flex justify-between items-center p-3 border-b border-slate-200 dark:border-slate-700/50">
+          <div className="w-full flex justify-between items-center p-3 border-b-2 border-slate-200 dark:border-slate-700/60">
             <div className="flex gap-3 items-center">
               <img
                 className="w-8 h-8 rounded-full ring-2 ring-transparent group-hover:ring-accent/50"
@@ -100,7 +100,7 @@ const PostCard = ({ postId, postOwner, openModalHandler }) => {
             pendingLike={pendingLike}
           />
           <CommentSection
-            cls="w-full mtiny:shrink p-2 flex items-center border-t border-slate-200 dark:border-slate-700/50"
+            cls="w-full mtiny:shrink p-2 flex items-center border-t-2 border-slate-200 dark:border-slate-700/60"
             comment={true}
             postId={postId}
           // addCommentHandler={setComments}

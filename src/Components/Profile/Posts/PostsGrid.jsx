@@ -5,7 +5,7 @@ import "../../UI/ImageOverlay.css";
 import { FavoriteOutlined, MapsUgc } from "@mui/icons-material";
 import { Skeleton } from "@mui/material";
 import { v4 as uuid } from "uuid";
-import { fetchPost } from "../../../Utils/FetchUtils";
+import { fetchPost, fetchComments } from "../../../Utils/FetchUtils";
 export default function PostsGrid(props) {
   const {
     setPageNumber,
@@ -61,9 +61,6 @@ export default function PostsGrid(props) {
       queryKey: ["post", post._id, { type: "comments" }],
       queryFn: async (...args) => {
         const data = await fetchComments(post._id, ...args);
-        if (args[0].pageParam == 0) {
-          bottomRef.current?.scrollIntoView({ behavior: "auto" });
-        }
         return data;
       },
       getNextPageParam: (lastPage, pages) => {
@@ -79,7 +76,7 @@ export default function PostsGrid(props) {
     <div className="grid grid-flow-row grid-cols-3 gap-1">
       {postPages?.length > 0 &&
         postPages.map((posts, idx) =>
-          posts.map((post, pid) => (
+          posts?.map((post, pid) => (
             <div
               key={post._id}
               onClick={() => setActivePost(post)}

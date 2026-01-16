@@ -7,9 +7,11 @@ import Sidebar from "../Sidebar/Sidebar";
  */
 const MainLayout = () => {
     return (
-        <div className="flex justify-start h-screen">
+        <div className="flex h-screen">
             <Sidebar />
-            <Outlet />
+            <main className="flex-1 flex justify-center overflow-y-auto">
+                <Outlet />
+            </main>
         </div>
     );
 };

@@ -74,7 +74,7 @@ const FeedCard = memo(
             )}
           </div>
 
-          <div className="mt-3 border-t border-slate-100 dark:border-slate-800 pt-3">
+          <div className="mt-3 border-t-2 border-slate-200 dark:border-slate-700/60 pt-3">
             <CardComments post={post} />
           </div>
         </div>

@@ -1,28 +1,29 @@
+// ImageUtils.jsx
 export const createImage = (url) =>
   new Promise((resolve, reject) => {
-    const image = new Image()
-    image.addEventListener('load', () => resolve(image))
-    image.addEventListener('error', (error) => reject(error))
-    image.setAttribute('crossOrigin', 'anonymous') // needed to avoid cross-origin issues on CodeSandbox
-    image.src = url
-  })
+    const image = new Image();
+    image.addEventListener("load", () => resolve(image));
+    image.addEventListener("error", (error) => reject(error));
+    image.setAttribute("crossOrigin", "anonymous"); // needed to avoid cross-origin issues on CodeSandbox
+    image.src = url;
+  });
 
 export function getRadianAngle(degreeValue) {
-  return (degreeValue * Math.PI) / 180
+  return (degreeValue * Math.PI) / 180;
 }
 
 /**
  * Returns the new bounding area of a rotated rectangle.
  */
 export function rotateSize(width, height, rotation) {
-  const rotRad = getRadianAngle(rotation)
+  const rotRad = getRadianAngle(rotation);
 
   return {
     width:
       Math.abs(Math.cos(rotRad) * width) + Math.abs(Math.sin(rotRad) * height),
     height:
       Math.abs(Math.sin(rotRad) * width) + Math.abs(Math.cos(rotRad) * height),
-  }
+  };
 }
 
 /**
@@ -34,48 +35,47 @@ export async function getCroppedImg(
   rotation = 0,
   flip = { horizontal: false, vertical: false }
 ) {
-  // console.log(imageSrc)
-  const image = await createImage(imageSrc)
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
+  const image = await createImage(imageSrc);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
 
   if (!ctx) {
-    return null
+    return null;
   }
 
-  const rotRad = getRadianAngle(rotation)
+  const rotRad = getRadianAngle(rotation);
 
   // calculate bounding box of the rotated image
   const { width: bBoxWidth, height: bBoxHeight } = rotateSize(
     image.width,
     image.height,
     rotation
-  )
+  );
 
   // set canvas size to match the bounding box
-  canvas.width = bBoxWidth
-  canvas.height = bBoxHeight
+  canvas.width = bBoxWidth;
+  canvas.height = bBoxHeight;
 
   // translate canvas context to a central location to allow rotating and flipping around the center
-  ctx.translate(bBoxWidth / 2, bBoxHeight / 2)
-  ctx.rotate(rotRad)
-  ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1)
-  ctx.translate(-image.width / 2, -image.height / 2)
+  ctx.translate(bBoxWidth / 2, bBoxHeight / 2);
+  ctx.rotate(rotRad);
+  ctx.scale(flip.horizontal ? -1 : 1, flip.vertical ? -1 : 1);
+  ctx.translate(-image.width / 2, -image.height / 2);
 
   // draw rotated image
-  ctx.drawImage(image, 0, 0)
+  ctx.drawImage(image, 0, 0);
 
-  const croppedCanvas = document.createElement('canvas')
+  const croppedCanvas = document.createElement("canvas");
 
-  const croppedCtx = croppedCanvas.getContext('2d')
+  const croppedCtx = croppedCanvas.getContext("2d");
 
   if (!croppedCtx) {
-    return null
+    return null;
   }
 
   // Set the size of the cropped canvas
-  croppedCanvas.width = pixelCrop.width
-  croppedCanvas.height = pixelCrop.height
+  croppedCanvas.width = pixelCrop.width;
+  croppedCanvas.height = pixelCrop.height;
 
   // Draw the cropped image onto the new canvas
   croppedCtx.drawImage(
@@ -88,34 +88,27 @@ export async function getCroppedImg(
     0,
     pixelCrop.width,
     pixelCrop.height
-  )
-
-  // As Base64 string
-  // return croppedCanvas.toDataURL('image/jpeg');
+  );
 
   // As a blob
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     croppedCanvas.toBlob((file) => {
-      resolve(URL.createObjectURL(file))
-    }, 'image/jpeg')
-  })
+      resolve(URL.createObjectURL(file));
+    }, "image/jpeg");
+  });
 }
 
-
 export const createImageBlob = async (imgURL) => {
-  // Apply the selected filter to the image element
   const image = await createImage(imgURL);
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = "high";
-  // set canvas size to match the bounding box
   canvas.width = image.width;
   canvas.height = image.height;
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-  // As a blob
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     canvas.toBlob(
       (file) => {
         resolve(file);
@@ -126,31 +119,33 @@ export const createImageBlob = async (imgURL) => {
   });
 };
 
+export const getFilterString = (adjustments) => {
+  const { brightness, contrast, saturate, sepia, hueRotate } = adjustments;
+  return `brightness(${brightness}) contrast(${contrast}) saturate(${saturate}) sepia(${sepia}) hue-rotate(${hueRotate}deg)`;
+};
 
-export const applyFilter = async(imgRef)=>{
-  // Apply the selected filter to the image element
-  const image = await createImage(imgRef.current.src)
-  const canvas = document.createElement('canvas')
-  const ctx = canvas.getContext('2d')
-  ctx.imageSmoothingEnabled=true; 
-  ctx.imageSmoothingQuality='high';
-  // set canvas size to match the bounding box
-  canvas.width = image.width
-  canvas.height = image.height
-  
-  const computedStyle = window.getComputedStyle(imgRef.current);
-  const filter = computedStyle.getPropertyValue('filter')
-  const opacity = computedStyle.getPropertyValue('opacity')
-  ctx.filter = filter
-  ctx.opacity = opacity
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+export const applyFilter = async (imgSrc, filterStyle, opacity = 1) => {
+  const image = await createImage(imgSrc);
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
 
-  // As a blob
-  return new Promise((resolve, reject) => {
-    canvas.toBlob((file) => {
-      resolve(URL.createObjectURL(file))
-    }, 'image/jpeg', 100)
-  })
-  
-  
+  canvas.width = image.width;
+  canvas.height = image.height;
+
+  ctx.filter = filterStyle;
+  ctx.globalAlpha = opacity;
+
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  return new Promise((resolve) => {
+    canvas.toBlob(
+      (file) => {
+        resolve(URL.createObjectURL(file));
+      },
+      "image/jpeg",
+      100
+    );
+  });
 };
