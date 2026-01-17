@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -40,6 +40,9 @@ const UserCard = ({ user, followings, loading }) => {
       setIsFollowing((prev) => !prev);
     },
   });
+  useEffect(() => {
+    setIsFollowing(followings.some((u) => u.following === user._id));
+  }, [followings, user._id]);
   const isCurrentUser = user.username === localStorage.getItem("username");
 
   return (

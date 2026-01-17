@@ -45,15 +45,37 @@ const useLikePost = (post) => {
       const newLikesCount =
         variables.reqType === "like" ? likesCount : likesCount;
 
-      // Invalidate profile queries
-      queryClient.invalidateQueries({
-        predicate: (query) =>
-          query.queryKey[0] === "profile" &&
-          query.queryKey[1] === "posts" &&
-          (query.queryKey[2]?.type === "saved" ||
-            query.queryKey[2]?.type === "posted"),
-        refetchType: "none",
-      });
+      // Update profile queries cache manually (Optimistic UI for other views)
+      queryClient.setQueriesData(
+        {
+          predicate: (query) =>
+            query.queryKey[0] === "profile" &&
+            query.queryKey[1] === "posts" &&
+            (query.queryKey[2]?.type === "saved" ||
+              query.queryKey[2]?.type === "posted"),
+        },
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) =>
+              page.map((p) => {
+                if (p._id === post._id) {
+                  return {
+                    ...p,
+                    isLiked: newLiked,
+                    likesCount:
+                      variables.reqType === "like"
+                        ? (p.likesCount ?? 0) + 1
+                        : (p.likesCount ?? 0) - 1,
+                  };
+                }
+                return p;
+              })
+            ),
+          };
+        }
+      );
 
       // Invalidate post info query
       queryClient.invalidateQueries({

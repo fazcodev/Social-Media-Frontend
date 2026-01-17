@@ -6,13 +6,6 @@ import { CircularProgress } from "@mui/material";
 import { apiUrl } from "../../Config/config";
 
 const Home = () => {
-  // const [pageNumber, setPageNumber] = useState(0);
-  // const url = `${apiUrl}/feeds`;
-  // const {
-  //   loading,
-  //   results: feedPosts,
-  //   hasMore,
-  // } = usePagFetch("", pageNumber, 10, url);
   const { data, hasNextPage, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ["feed"],
     queryFn: async ({ pageParam, ...args }) => {
@@ -55,9 +48,7 @@ const Home = () => {
           page?.map((post, index) => {
             if (data.pages.length === idx + 1 && page.length === index + 1) {
               return (
-                <div ref={lastPostElementRef} key={post._id}>
-                  <FeedCard post={post} />
-                </div>
+                <FeedCard ref={lastPostElementRef} key={post._id} post={post} />
               );
             } else {
               return <FeedCard key={post._id} post={post} />;
