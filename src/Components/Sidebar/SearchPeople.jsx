@@ -34,29 +34,6 @@ const SearchPeople = ({ active }) => {
     }
   }, [searchRef.current, active]);
 
-
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const fetchState = queryClient.getQueryState([
-  //       "profile",
-  //       localStorage.getItem("username"),
-  //       "followings",
-  //     ]);
-  //     if (fetchState?.data && !fetchState.isInvalidated) {
-  //       console.log(fetchState.data);
-  //       setFollowings(fetchState.data);
-  //     } else {
-  //       const { data } = await queryClient.fetchQuery({
-  //         queryKey: ["profile", localStorage.getItem("username"), "followings"],
-  //         queryFn: ()=>fetchFollowings(localStorage.getItem("username")),
-  //       });
-  //       setFollowings(data);
-  //     }
-  //   };
-  //   if(query.length == 1)fetchData();
-  // }, [query]);
-
   return (
     <div
       className={`fixed top-0 left-0 w-80 z-40 bg-white/20 dark:bg-slate-900/40 backdrop-blur-xl h-screen border-r border-white/50 dark:border-white/10 shadow-2xl transition-all duration-500 ease-in-out ${active
@@ -85,7 +62,7 @@ const SearchPeople = ({ active }) => {
               <UserCard
                 key={user._id}
                 user={user}
-                followings={followings}
+                followings={followings || []}
                 loading={loading || isLoading}
               />
             ))}

@@ -21,17 +21,17 @@ const ProfileInfo = () => {
 
   return (
     <form
-      className="bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] rounded-lg px-8 pt-6 pb-8 mb-4"
+      className="bg-white/30 dark:bg-slate-800/40 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 shadow-lg rounded-2xl px-8 pt-6 pb-8 mb-4 transition-all duration-300"
       onSubmit={(e) => handleSubmit(e, dispatch, authActions)}
     >
       <div className="mb-4">
-        <h2 className="text-xl font-bold mb-2">Profile Info</h2>
+        <h2 className="text-xl font-bold mb-2 text-slate-800 dark:text-slate-100">Profile Info</h2>
       </div>
       <AlertMessage error={error} alertMsg={alertMsg} />
       <div className="mb-4">
         <label
           htmlFor="username"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2"
         >
           Username
         </label>
@@ -42,14 +42,13 @@ const ProfileInfo = () => {
           name="username"
           value={userData.username}
           onChange={handleInputChange}
-          className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow-sm appearance-none border border-slate-300 dark:border-slate-600 rounded-xl w-1/2 py-2 px-3 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900/50 leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
           placeholder="Username"
         />
         {!loading && userData.username.length > 0 && (
           <div
-            className={`${
-              usernameAvl ? "text-green-600" : "text-red-600"
-            } inline ml-2`}
+            className={`${usernameAvl ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+              } inline ml-2`}
           >
             {usernameAvl ? <CheckCircleOutline /> : <CancelOutlined />}
           </div>
@@ -58,7 +57,7 @@ const ProfileInfo = () => {
       <div className="mb-4">
         <label
           htmlFor="name"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2"
         >
           Name
         </label>
@@ -69,32 +68,32 @@ const ProfileInfo = () => {
           name="name"
           value={userData.name}
           onChange={handleInputChange}
-          className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow-sm appearance-none border border-slate-300 dark:border-slate-600 rounded-xl w-1/2 py-2 px-3 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900/50 leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
           placeholder="Name"
         />
       </div>
       <div className="mb-4">
         <label
           htmlFor="age"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2"
         >
           Age
         </label>
         <input
-          
+
           type="number"
           id="age"
           name="age"
           value={userData.age}
           onChange={handleInputChange}
-          className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow-sm appearance-none border border-slate-300 dark:border-slate-600 rounded-xl w-1/2 py-2 px-3 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900/50 leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
           placeholder="Age"
         />
       </div>
       <div className="mb-4">
         <label
           htmlFor="bio"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2"
         >
           Bio
         </label>
@@ -104,17 +103,17 @@ const ProfileInfo = () => {
           rows={2}
           value={userData.bio}
           onChange={handleInputChange}
-          className="shadow appearance-none border rounded-md w-1/2 maxh-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow-sm appearance-none border border-slate-300 dark:border-slate-600 rounded-xl w-1/2 maxh-2 py-2 px-3 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900/50 leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
           placeholder="Write something about yourself"
         />
-        <span className="text-stone-400 ml-2 text-sm">
+        <span className="text-slate-400 dark:text-slate-500 ml-2 text-sm">
           {userData.bio.length}/150
         </span>
       </div>
       <div className="mb-4">
         <label
           htmlFor="email"
-          className="block text-gray-700 text-sm font-bold mb-2"
+          className="block text-slate-700 dark:text-slate-300 text-sm font-bold mb-2"
         >
           Email
         </label>
@@ -125,13 +124,13 @@ const ProfileInfo = () => {
           name="email"
           value={userData.email}
           onChange={handleInputChange}
-          className="shadow appearance-none border rounded w-1/2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow-sm appearance-none border border-slate-300 dark:border-slate-600 rounded-xl w-1/2 py-2 px-3 text-slate-700 dark:text-slate-200 bg-slate-50 dark:bg-slate-900/50 leading-tight focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
           placeholder="Email"
         />
       </div>
       <button
         disabled={loading}
-        className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-accent hover:bg-accent-dark disabled:opacity-50 text-white font-bold py-2 px-6 rounded-xl shadow-lg shadow-accent/20 hover:shadow-accent/40 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transform transition-all active:scale-95"
         type="submit"
       >
         Save
